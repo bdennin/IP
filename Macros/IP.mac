@@ -1,0 +1,26 @@
+
+#turbo 5
+
+#include IP_Macro_Actions.inc
+#include IP_Macro_Auto.inc
+#include IP_Macro_Commands.inc
+#include IP_Macro_Events.inc
+#include IP_Macro_Setup.inc
+
+sub Main() {
+
+	/call "Setup"
+	/call "Setup_Auto"
+
+	/echo IP loaded.
+
+	:Main
+
+	/call "Check_Actions"
+	/call "Check_Events"
+	/call "Check_Auto"
+	
+	/goto :Main
+
+	/return
+}
