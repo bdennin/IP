@@ -22,9 +22,6 @@ sub Check_Actions() {
 	/call "Check_Assist"
 	/if (${Macro.Return}) /return
 
-	/call "Check_Cannibalize"
-	/if (${Macro.Return}) /return
-
 	/return
 }
 
@@ -73,6 +70,8 @@ sub Check_Med() {
 		}
 	}
 
+	/if (${Me.Feigning}) /stand
+
 	/return
 }
 
@@ -91,12 +90,15 @@ sub Check_Zone() {
 
 sub Check_Combat() {
 
-	/declare cnctdb 	string 	local 	${NetBots.Client}
+	/declare cncbts 	string 	local 	${NetBots.Client}
+	/declare netbot 	string 	local 	"0"
 	/declare i 			int 	local
 
 	/for i 1 to ${NetBots.Counts} 
 		
-		/if (${NetBots[${cnctdb.Arg[${i}]}].CombatState} == 0) {
+		/varset netbot ${cncbts.Arg[${i}]}
+
+		/if (${NetBots[${netbot}].CombatState} == 0) {
 
 			/varset gl_isastg true
 
@@ -141,18 +143,21 @@ sub Check_Target_Heals() {
 		/if (${Me.CurrentMana} < ${Spell[${gl_thlspl}].Mana}) /return 0
 
 		/declare cncbts 	string 	local 	${NetBots.Client}
+		/declare netbot 	string 	local 	"0"
 		/declare lwstpc 	int 	local 	100	
 		/declare hltgid 	int 	local 	
 		/declare i 			int 	local
 
 		/for i 1 to ${NetBots.Counts} 
 			
-			/if (${Spawn[ID ${NetBots[${cncbts.Arg[${i}]}].ID}].Distance} < ${gl_spldis}) {
+			/varset netbot ${cncbts.Arg[${i}]}
 
-				/if (${NetBots[${cncbts.Arg[${i}]}].PctHPs} < ${lwstpc}) {
+			/if (${Spawn[PC ${netbot}].ID} && ${Spawn[PC ${netbot}].Distance} < ${gl_spldis}) {
 
-					/varset lwstpc ${NetBots[${cncbts.Arg[${i}]}].PctHPs}
-					/varset hltgid ${NetBots[${cncbts.Arg[${i}]}].ID}
+				/if (${NetBots[${netbot}].PctHPs} < ${lwstpc}) {
+
+					/varset lwstpc ${NetBots[${netbot}].PctHPs}
+					/varset hltgid ${NetBots[${netbot}].ID}
 				}
 			}
 
@@ -177,20 +182,23 @@ sub Check_HoTs() {
 
 		/declare cncbts 	string 	local 	${NetBots.Client}
 		/declare hotsid 	string 	local 	${Spell[${gl_hotspl}].ID}
+		/declare netbot 	string 	local 	"0"
 		/declare lwstpc 	int 	local 	100	
 		/declare hltgid 	int 	local 	
 		/declare i 			int 	local
 
 		/for i 1 to ${NetBots.Counts} 
 			
-			/if (${Spawn[ID ${NetBots[${cncbts.Arg[${i}]}].ID}].Distance} < ${gl_spldis}) {
+			/varset netbot ${cncbts.Arg[${i}]}
 
-				/if (${NetBots[${cncbts.Arg[${i}]}].PctHPs} < ${lwstpc}) {
+			/if (${Spawn[PC ${netbot}].ID} && ${Spawn[PC ${netbot}].Distance} < ${gl_spldis}) {
 
-					/if (!${NetBots[${cncbts.Arg[${i}]}].ShortBuff.Find[${hotsid}]}) {
+				/if (${NetBots[${netbot}].PctHPs} < ${lwstpc}) {
+
+					/if (!${NetBots[${netbot}].ShortBuff.Find[${hotsid}]}) {
 				
-						/varset lwstpc ${NetBots[${cncbts.Arg[${i}]}].PctHPs}
-						/varset hltgid ${NetBots[${cncbts.Arg[${i}]}].ID}
+						/varset lwstpc ${NetBots[${netbot}].PctHPs}
+						/varset hltgid ${NetBots[${netbot}].ID}
 					}
 				}
 			}
@@ -225,7 +233,7 @@ sub Check_Quick_Buffs() {
 			/varset bufgem ${gl_qkbufs[${i},3]}
 			/varset buffid ${gl_qkbufs[${i},4]}
 
-			/if (${Spawn[${buftgt}].ID} && ${Spawn[${buftgt}].Distance} < ${gl_spldis}) {
+			/if (${Spawn[PC ${buftgt}].ID} && ${Spawn[PC ${buftgt}].Distance} < ${gl_spldis}) {
 			
 				/if (!${NetBots[${buftgt}].Buff.Find[${buffid}]}) {
 				
@@ -285,6 +293,9 @@ sub Check_Assist() {
 		
 		/call "Check_Debuffs"
 		/if (${Macro.Return}) /return 1
+
+		/call "Check_Cannibalize"
+		/if (${Macro.Return}) /return 1
 		
 		/call "Check_Nukes"
 		/if (${Macro.Return}) /return 1
@@ -295,7 +306,7 @@ sub Check_Assist() {
 
 sub Check_Abilities() {
 	
-	/if (${gl_ismele}) {
+	/if (${gl_ismele} && ${Target.ID}) {
 
 		/declare abl 	string	local 
 		/declare i 		int 	local
@@ -323,6 +334,7 @@ sub Check_Pet_Assists() {
 
 		/varset gl_pettid ${gl_asstid}
 		/tar ID ${gl_pettid}
+		/delay 1
 
 		/pet attack
 	}

@@ -7,8 +7,6 @@ sub Cast(string name, string gem, int ID) {
 
 	/if (${Me.CurrentMana} < ${Spell[${name}].Mana} + 200) /return 0
 
-	/rootme
-
 	/tar ID ${ID}
 
 	/delay 1
@@ -17,11 +15,12 @@ sub Cast(string name, string gem, int ID) {
 
 	/varcalc waittm ${Spell[${name}].MyCastTime} + 2.5
  
-	/delay ${waittm}s ${gl_brkcst}
+	/delay ${waittm}s ${gl_brkcst != false}
 
-	/if (${gl_brkcst}) /interrupt
-
-	/rootme off
-
+	/if (${gl_brkcst}) {
+		/bc my casting was broken!
+		/interrupt
+	}
+	
 	/return 1
 }

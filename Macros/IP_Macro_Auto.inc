@@ -2,15 +2,14 @@
 sub Setup_Auto() {
 	
 	/declare buftmr	timer 	outer 30m
+	/declare movtmr timer 	outer 0s
 
 	/declare pckldr string 	outer "Hrelgar"
 
 	/declare begmed int 	outer 20
 	/declare endmed int 	outer 90
-	/declare actrgt int 	outer 1
-	/declare cyccnt int 	outer 0
-	/declare tgtcyc int 	outer 5
-	/declare agrdis int 	outer 30
+	/declare acttgt int 	outer 1
+	/declare agrdis int 	outer 40
 
 	/declare atomat bool 	outer false
 	/declare medtng bool 	outer false
@@ -61,49 +60,51 @@ sub Check_Auto_Danger() {
 
 	/varset nrstid ${NearestSpawn["NPC"].ID}
 
+	/if (${Target.ID} && ${Target.Distance} < ${gl_foldis}) {
+
+		/if (${Target.ID} != ${gl_asstid}) {
+			
+			/echo Auto :: Target was first to attack me.
+				
+			/varset gl_asstid ${Target.ID}
+			/varset gl_isastg true
+
+			/bc assist on ${Target.ID}
+		}
+
+		/tar ID ${gl_asstid}
+		/delay 1
+		/stick ID ${gl_asstid} ${gl_assdis}
+		/attack on
+
+		/varset acttgt 1
+
+		/delay 1s
+
+		/return 1
+	}
+
 	/if (${Spawn[ID ${nrstid}].Distance} < ${agrdis}) {
 
-		/if (${Target.ID}) {
+		/if (${nrstid} != ${gl_asstid}) {
 
-			/if (${Target.ID} != ${gl_asstid}) {
-				
-				/echo Auto :: Target was first to attack me.
-					
-				/varset gl_asstid ${Target.ID}
-				/varset gl_isastg true
+			/echo Auto :: Found target nearby.
 
-				/bc assist on ${Target.ID}
-			}
+			/varset gl_asstid ${nrstid}
+			/varset gl_isastg true
+
+			/bc assist on ${gl_asstid}
 
 			/tar ID ${gl_asstid}
+			/delay 1
 			/stick ID ${gl_asstid} ${gl_assdis}
 			/attack on
 
-			/varset actrgt 1
-			/varset cyccnt 0
+			/varset acttgt 1
+
+			/delay 1s
 
 			/return 1
-		
-		} else {
-		
-			/if (${nrstid} != ${gl_asstid}) {
-
-				/echo Auto :: Found target in camp.
-
-				/varset gl_asstid ${nrstid}
-				/varset gl_isastg true
-
-				/bc assist on ${gl_asstid}
-
-				/tar ID ${gl_asstid}
-				/stick ID ${gl_asstid} ${gl_assdis}
-				/attack on
-
-				/varset actrgt 1
-				/varset cyccnt 0
-
-				/return 1
-			}
 		}
 	}
 
@@ -129,19 +130,22 @@ sub Check_Auto_Buffs() {
 sub Check_Auto_Med() {
 
 	/declare cnctdb 	string 	local 	${NetBots.Client}
+	/declare netbot 	string 	local 	"0"
 	/declare manpct		int 	local 	0
 	/declare i 			int 	local 	0
 
 	/if (${medtng}) {
 
+		/varset netbot ${cnctdb.Arg[${i}]}
+
 		/for i 1 to ${NetBots.Counts} 
 
-		/varset manpct ${NetBots[${cnctdb.Arg[${i}]}].PctMana}
+			/varset manpct ${NetBots[${netbot}].PctMana}
 
-		/if (${manpct} != 0 && ${manpct} < ${endmed}) {
+			/if (${manpct} != 0 && ${manpct} < ${endmed}) {
 
-			/return 1
-		}
+				/return 1
+			}
 
 		/next i
 
@@ -152,15 +156,15 @@ sub Check_Auto_Med() {
 
 		/for i 1 to ${NetBots.Counts} 
 
-		/varset manpct ${NetBots[${cnctdb.Arg[${i}]}].PctMana}
+			/varset manpct ${NetBots[${netbot}].PctMana}
 
-		/if (${manpct} != 0 && ${manpct} < ${begmed}) {
+			/if (${manpct} != 0 && ${manpct} < ${begmed}) {
 
-			/echo Auto :: Beginning meditation.
+				/echo Auto :: Beginning meditation.
 
-			/varset medtng true
-			/return 1
-		}
+				/varset medtng true
+				/return 1
+			}
 
 		/next i
 	} 
@@ -170,38 +174,42 @@ sub Check_Auto_Med() {
 
 sub Check_Auto_Move() {
 	
-	/echo Auto :: Moving to target...
+	/if (!${movtmr}) {
 
-	/declare id int local 0
+		/echo Auto :: Finding target...
+		
+		/declare 	id int local 0
+		
+		:AcquireTarget
 
-	/if (${NearestSpawn["NPC"].Distance} > ${agrdis}) {
-
-		/varset id ${NearestSpawn[${actrgt},"NPC"].ID}
+		/varset 	id ${NearestSpawn[${acttgt},"NPC"].ID}
 
 		/tar ID ${id}
+		/delay 1
 
-		/stick ID ${id} ${gl_assdis}
+		/if (${Target.Level} >= ${Me.Level}) {
 
-		/delay 1s
+			/echo Auto :: Target is overcon. Switching targets.
 
-		/stick off
+			/varcalc acttgt ${acttgt} + 1
 
-		/varcalc cyccnt ${cyccnt} + 1
-
-		/if (${cyccnt} >= ${tgtcyc}) {
-
-			/echo Auto :: Switching move targets.
-
-			/varset cyccnt 0
-			/varcalc actrgt ${actrgt} + 1
-		
-		} else /if (${Spawn[ID ${id}].ConColor.NotEqual["BLUE"]}) {
-
-			/echo Auto :: Target is undesirable.
-
-			/varcalc actrgt ${actrgt} + 1
-			/return
+			/goto :AcquireTarget
 		}
+
+		/if (${Target.DistanceZ} > 30) {
+
+			/echo Auto :: Target is on a different plane. Switching targets.
+
+			/varcalc acttgt ${acttgt} + 1
+
+			/goto :AcquireTarget
+		}
+
+		/varset movtmr 3s
+
+		/stick ID ${id} ${gl_assdis}		
+
+		/varcalc acttgt ${acttgt} + 1
 	}
 
 	/return 
@@ -214,7 +222,6 @@ sub Event_Auto(string line) {
 
 		/varset atomat true
 		/echo Automation enabled.
-
 
 		/if (${Me.Name.Equal[${pckldr}]}) {
 
@@ -229,4 +236,10 @@ sub Event_Auto(string line) {
 	}
 
 	/return
+}
+
+#event Cannot_Hit "You can't hit them from here."
+sub Event_Cannot_Hit(string line) {
+	
+
 }

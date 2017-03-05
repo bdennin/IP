@@ -221,7 +221,7 @@ sub Init_Cleric() {
 	/varset gl_nmtgbf 		2
 	/varset gl_nmabls 		0
 	
-	/varset gl_helpct 		55
+	/varset gl_helpct 		70
 	/varset gl_hotpct 		0
 
 	/varset gl_helgem 		2
@@ -359,7 +359,7 @@ sub Init_Monk() {
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
-	/varset gl_nmabls 		0
+	/varset gl_nmabls 		1
 	
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
@@ -634,7 +634,7 @@ sub Init_Warrior() {
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
-	/varset gl_nmabls 		0
+	/varset gl_nmabls 		2
 	
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
@@ -663,7 +663,7 @@ sub Init_Wizard() {
 	/varset gl_ghlspl 		"0"
 	/varset gl_thlspl		"0"
 	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
+	/varset gl_nukspl 		"Lure of Frost"
 	/varset gl_petspl 		"0"
 	/varset gl_petbuf 		"0"
 
@@ -676,7 +676,7 @@ sub Init_Wizard() {
 
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
+	/varset gl_nukgem 		1
 	/varset gl_petgem 		0
 
 	/varset gl_ismele		false

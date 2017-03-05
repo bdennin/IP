@@ -44,7 +44,7 @@ sub Event_Assist(string line, string sender, int ID) {
 	
 	/if (${Spawn[${sender}].ID} == ${Me.ID}) /return
 
-	/if (${Spawn[${sender}].ID} && ${Spawn[${sender}].Distance} < ${gl_comdis}) {
+	/if (${Spawn[PC ${sender}].ID} && ${Spawn[${sender}].Distance} < ${gl_comdis}) {
 
 		/if (${Spawn[ID ${ID}].ID} && ${Spawn[ID ${ID}].Distance} < ${gl_comdis}) {
 
@@ -58,6 +58,7 @@ sub Event_Assist(string line, string sender, int ID) {
 			/if (${gl_ismele}) {
 
 				/tar ID ${gl_asstid}
+				/delay 1
 				/stick ID ${gl_asstid} ${gl_assdis} ${gl_assdir}
 				/attack on
 			}
@@ -72,9 +73,11 @@ sub Event_Buff(string line, string sender, int ID) {
 	
 	/if (${gl_nmtgbf} == 0) /return
 
-	/if (${Spawn[${sender}].ID} && ${Spawn[${sender}].Distance} < ${gl_comdis}) {
+	/if (${Spawn[PC ${sender}].ID} && ${Spawn[${sender}].Distance} < ${gl_comdis}) {
 
 		/if (${Spawn[ID ${ID}].ID} && ${Spawn[ID ${ID}].Distance} < ${gl_comdis}) {
+
+			/bc Buffing ${ID}
 
 			/declare i int local
 
@@ -95,6 +98,8 @@ sub Event_Buff(string line, string sender, int ID) {
 
 			/next i
 
+			/bc Done buffing ${ID}
+			
 			/if (${gl_isfwlg}) {
 
 				/stick ID ${gl_fwlgid} ${gl_foldis}
@@ -182,21 +187,26 @@ sub Event_Loot_Corpses(string line) {
 	
 	:LootCorpse 
 
-	/if (${NearestSpawn[Corpse ${Me.Name}].Distance} < ${gl_spldis}) {
+	/if (${SpawnCount[Corpse ${Me.Name}]} > 0) {
+			
+		/if (${NearestSpawn[Corpse ${Me.Name}].Distance} < ${gl_spldis}) {
 
-		/tar ID ${NearestSpawn[Corpse ${Me.Name}].ID}
+			/tar ID ${NearestSpawn[Corpse ${Me.Name}].ID}
 
-		/corpse
+			/delay 1
 
-		/loot
+			/corpse
 
-		/keypress esc
+			/loot
 
-		/delay 1s
+			/keypress esc
 
-		/goto :LootCorpse
+			/delay 1s
+
+			/goto :LootCorpse
+		}
 	}
-
+	
 	/return
 }
 
@@ -227,11 +237,11 @@ sub Event_Med(string line) {
 #event Speak "<#*#> speak #1# #2#"
 sub Event_Speak(string line, int ID, string message) {	
 
-	/if (${Spawn[${ID}].ID} && ${Spawn[ID ${ID}].Distance} < ${gl_comdis}) {
+	/if (${Spawn[ID ${ID}].ID} && ${Spawn[ID ${ID}].Distance} < ${gl_comdis}) {
 
 		:MoveToTarget
 
-		/if (${Spawn[${ID}].ID} && ${Spawn[ID ${ID}].Distance} > ${gl_spkdis}) {
+		/if (${Spawn[ID ${ID}].ID} && ${Spawn[ID ${ID}].Distance} > ${gl_spkdis}) {
 
 			/moveto ID ${ID}
 			/delay 5
@@ -265,8 +275,6 @@ sub Event_Start_Enrage(string line) {
 #event Take_Damage "#1# bites YOU for #*# points of damage."
 sub Event_Take_Damage(string line) {
 	
-	/if (!${gl_dmgtmr} && !${gl_istank}) /bc taking damage!
-
 	/if (${Me.Class.Name.Equal["Monk"]}) {
 
 		/if (${Me.AbilityReady["Feign Death"]}) {
@@ -279,6 +287,7 @@ sub Event_Take_Damage(string line) {
 
 				/stick ID ${gl_asstid} ${gl_assdis} ${gl_assdir}
 				/tar ${ID} ${gl_asstid}
+				/delay 1
 				/attack on
 			}
 		}
@@ -292,17 +301,20 @@ sub Event_Take_Damage(string line) {
 #event Warp "<#1#> warp to #2#"
 sub Event_Warp(string line, string sender, int ID) {
 
-	/if (${Spawn[${sender}].ID} == ${Me.ID}) /return
+	/if (${Spawn[PC ${sender}].ID} == ${Me.ID}) /return
 
-	/if (${Spawn[${sender}].ID}) {
+	/if (${Spawn[PC ${sender}].ID}) {
 
 		/if (${Spawn[ID ${ID}].ID}) {
 
 			:WarpLoop
 
+			/varset gl_brkcst true
+
 			/if (${Spawn[ID ${ID}].Distance} > ${gl_wrpdis}) {
 
-				/target ID ${ID}
+				/tar ID ${ID}
+				/delay 1
 				/warp t
 
 				/goto :WarpLoop
