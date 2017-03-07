@@ -77,7 +77,7 @@ sub Event_Buff(string line, string sender, int ID) {
 
 		/if (${Spawn[ID ${ID}].ID} && ${Spawn[ID ${ID}].Distance} < ${gl_comdis}) {
 
-			/bc Buffing ${ID}
+			/bc Buffing ${ID}.
 
 			/declare i int local
 
@@ -98,7 +98,7 @@ sub Event_Buff(string line, string sender, int ID) {
 
 			/next i
 
-			/bc Done buffing ${ID}
+			/bc Done buffing ${ID}.
 			
 			/if (${gl_isfwlg}) {
 
@@ -283,13 +283,7 @@ sub Event_Take_Damage(string line) {
 			/delay 5
 			/stand
 
-			/if (${gl_isastg}) {
-
-				/stick ID ${gl_asstid} ${gl_assdis} ${gl_assdir}
-				/tar ${ID} ${gl_asstid}
-				/delay 1
-				/attack on
-			}
+			/if (${Target.ID} && ${gl_isastg}) /attack on
 		}
 	}
 

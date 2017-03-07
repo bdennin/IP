@@ -10,18 +10,46 @@ sub Check_Actions() {
 		/return
 	}
 
-	/call "Check_Heals"
+	/call "Check_Group_Heals"
+	/if (${Macro.Return}) /return
+
+	/call "Check_Target_Heals"
+	/if (${Macro.Return}) /return
+
+	/call "Check_HoTs"
 	/if (${Macro.Return}) /return
 
 	/call "Check_Quick_Buffs"
 	/if (${Macro.Return}) /return
 
-	/call "Check_Pets"
-	/if (${Macro.Return}) /return
+	/if	(${Bool[${gl_petspl}]}) {
+		
+		/call "Check_Pet_Summon"
+		/if (${Macro.Return}) /return
 
-	/call "Check_Assist"
-	/if (${Macro.Return}) /return
+		/call "Check_Pet_Buffs"
+		/if (${Macro.Return}) /return
+	}	
 
+	/if (${gl_isastg} && ${Spawn[ID ${gl_asstid}].ID}) {
+
+		/if (${Bool[${gl_petspl}]}) {
+
+			/call "Check_Pet_Assists"
+		}
+		
+		/call "Check_Abilities"
+
+		/call "Check_Debuffs"
+		/if (${Macro.Return}) /return
+
+		/call "Check_Cannibalize"
+		/if (${Macro.Return}) /return
+		
+		/call "Check_Nukes"
+		/if (${Macro.Return}) /return
+	}
+	
 	/return
 }
 
@@ -113,20 +141,6 @@ sub Check_Combat() {
 	/return 
 }
 
-sub Check_Heals() {
-
-	/call "Check_Group_Heals"
-	/if (${Macro.Return}) /return 1
-
-	/call "Check_Target_Heals"
-	/if (${Macro.Return}) /return 1
-
-	/call "Check_HoTs"
-	/if (${Macro.Return}) /return 1
-
-	/return 0
-}
-
 sub Check_Group_Heals() {
 	
 	/if (${Bool[${gl_ghlspl}]}) {
@@ -140,7 +154,7 @@ sub Check_Target_Heals() {
 
 	/if (${Bool[${gl_thlspl}]}) {
 
-		/if (${Me.CurrentMana} < ${Spell[${gl_thlspl}].Mana}) /return 0
+		/if (${Me.CurrentMana} < ${Spell[${gl_thlspl}].Mana} + 100) /return 0
 
 		/declare cncbts 	string 	local 	${NetBots.Client}
 		/declare netbot 	string 	local 	"0"
@@ -178,7 +192,7 @@ sub Check_HoTs() {
 
 	/if (${Bool[${gl_hotspl}]}) {
 
-		/if (${Me.CurrentMana} < ${Spell[${gl_hotspl}].Mana}) /return 0
+		/if (${Me.CurrentMana} < ${Spell[${gl_hotspl}].Mana} + 100) /return 0
 
 		/declare cncbts 	string 	local 	${NetBots.Client}
 		/declare hotsid 	string 	local 	${Spell[${gl_hotspl}].ID}
@@ -232,6 +246,8 @@ sub Check_Quick_Buffs() {
 			/varset buftgt ${gl_qkbufs[${i},2]}
 			/varset bufgem ${gl_qkbufs[${i},3]}
 			/varset buffid ${gl_qkbufs[${i},4]}
+	
+			/if (${Me.CurrentMana} < ${Spell[${bufspl}].Mana} + 100) /return 0
 
 			/if (${Spawn[PC ${buftgt}].ID} && ${Spawn[PC ${buftgt}].Distance} < ${gl_spldis}) {
 			
@@ -249,23 +265,11 @@ sub Check_Quick_Buffs() {
 	/return	0
 }
 
-sub Check_Pets() {
-	
-	/if (${Bool[${gl_petspl}]}) {
-
-		/call "Check_Pet_Summon"
-		/if (${Macro.Return}) /return 1
-
-		/call "Check_Pet_Buffs"
-		/if (${Macro.Return}) /return 1
-	}
-
-	/return 0
-}
-
 sub Check_Pet_Summon() {
 
 	/if (!${Me.Pet.ID}) {
+
+		/if (${Me.CurrentMana} < ${Spell[${gl_petspl}].Mana} + 100) /return 0
 
 		/call Cast ${gl_petspl} ${gl_petgem} ${Me.ID}
 		/return 1
@@ -283,25 +287,20 @@ sub Check_Pet_Buffs() {
 	/return 0
 }
 
-sub Check_Assist() {
+sub Check_Pet_Assists() {
 
-	/if (${gl_isastg}) {
+	/if (${Me.Pet.Distance} > ${gl_lshdis}) /return
 
-		/call "Check_Abilities"
-
-		/call "Check_Pet_Assists"
+	/if (${gl_pettid} != ${gl_asstid}) {
 		
-		/call "Check_Debuffs"
-		/if (${Macro.Return}) /return 1
+		/varset gl_pettid ${gl_asstid}
+		/tar ID ${gl_pettid}
+		/delay 1
 
-		/call "Check_Cannibalize"
-		/if (${Macro.Return}) /return 1
-		
-		/call "Check_Nukes"
-		/if (${Macro.Return}) /return 1
+		/pet attack
 	}
 
-	/return 0
+	/return 
 }
 
 sub Check_Abilities() {
@@ -323,54 +322,44 @@ sub Check_Abilities() {
 	/return
 }
 
-sub Check_Pet_Assists() {
-
-	/if (${gl_pettid} != ${gl_asstid}) {
-
-		/if (!${Spawn[Corpse ID ${gl_pettid}].ID}) {
-
-			/pet back off
-		}
-
-		/varset gl_pettid ${gl_asstid}
-		/tar ID ${gl_pettid}
-		/delay 1
-
-		/pet attack
-	}
-
-	/return 
-}
-
 sub Check_Debuffs() {
 	
+	/return 0
+}
+
+sub Check_Cannibalize() {
+	
+	/if (${Me.Class.Name.NotEqual["Shaman"]} && !${FindItem["Manastone"].InvSlot}) /return 0
+
+	/if (${gl_isastg} && ${Me.PctMana} < 90 && ${Me.PctHPs} > 75) {
+
+		/if (${Me.Class.Name.Equal["Shaman"]}) {
+
+			/if (${Me.SpellReady["Ancient: Chaotic Pain"]}) {
+
+				/call Cast "Ancient: Chaotic Pain" 9 ${Me.ID}
+
+				/return 1
+			}
+
+		} else {
+
+			/itemnotify ${FindItem["Manastone"].InvSlot} rightmouseup
+		}
+	}
+
 	/return 0
 }
 
 sub Check_Nukes() {
 	
 	/if (${Bool[${gl_nukspl}]}) {
+			
+		if (${Me.CurrentMana} < ${Spell[${gl_nukspl}].Mana}) /return 0
 
 		/if (${Me.SpellReady[${gl_nukspl}]}) {
 
 			/call Cast ${gl_nukspl} ${gl_nukgem} ${gl_asstid}
-
-			/return 1
-		}
-	}
-
-	/return 0
-}
-
-sub Check_Cannibalize() {
-	
-	/if (${Me.Class.Name.NotEqual["Shaman"]}) /return 0
-
-	/if (${gl_isastg} && ${Me.PctMana} < 90) {
-
-		/if (${Me.SpellReady["Ancient: Chaotic Pain"]}) {
-
-			/call Cast "Ancient: Chaotic Pain" 9 ${Me.ID}
 
 			/return 1
 		}

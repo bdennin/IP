@@ -46,7 +46,7 @@ sub Setup_Global() {
 sub Setup_Class() {
 
 	/declare gl_qkbufs[4,4] 	string	outer 	"0"
-	/declare gl_tgtbfs[2,4] 	string	outer 	"0"
+	/declare gl_tgtbfs[3,4] 	string	outer 	"0"
 	/declare gl_cbtabl[6] 		string	outer 	"0"
 
 	/declare gl_assdir			string 	outer	"0"
@@ -584,6 +584,11 @@ sub Init_Shaman() {
 	/varset gl_tgtbfs[2,3] "4"
 	/varset gl_tgtbfs[2,4] "${Spell[${gl_tgtbfs[2,1]}].ID}"
 
+	/varset gl_tgtbfs[3,1] "Talisman of the Boar"
+	/varset gl_tgtbfs[3,2] "Hrelgar"
+	/varset gl_tgtbfs[3,3] "3"
+	/varset gl_tgtbfs[3,4] "${Spell[${gl_tgtbfs[3,1]}].ID}"
+
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"behind"
@@ -596,14 +601,14 @@ sub Init_Shaman() {
 	/varset gl_petbuf 		"Swift Like the Wind"
 
 	/varset gl_nmqkbf 		4
-	/varset gl_nmtgbf 		2
+	/varset gl_nmtgbf 		3
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
-	/varset gl_hotpct 		70
+	/varset gl_hotpct 		80
 
 	/varset gl_helgem 		0
-	/varset gl_hotgem 		2
+	/varset gl_hotgem 		1
 	/varset gl_nukgem 		0
 	/varset gl_petgem 		8
 

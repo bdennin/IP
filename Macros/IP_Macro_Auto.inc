@@ -136,10 +136,9 @@ sub Check_Auto_Med() {
 
 	/if (${medtng}) {
 
-		/varset netbot ${cnctdb.Arg[${i}]}
-
 		/for i 1 to ${NetBots.Counts} 
 
+			/varset netbot ${cnctdb.Arg[${i}]}
 			/varset manpct ${NetBots[${netbot}].PctMana}
 
 			/if (${manpct} != 0 && ${manpct} < ${endmed}) {
@@ -156,6 +155,7 @@ sub Check_Auto_Med() {
 
 		/for i 1 to ${NetBots.Counts} 
 
+			/varset netbot ${cnctdb.Arg[${i}]}
 			/varset manpct ${NetBots[${netbot}].PctMana}
 
 			/if (${manpct} != 0 && ${manpct} < ${begmed}) {
@@ -189,7 +189,7 @@ sub Check_Auto_Move() {
 
 		/if (${Target.Level} >= ${Me.Level}) {
 
-			/echo Auto :: Target is overcon. Switching targets.
+			/echo Auto :: Target is too powerful. Switching targets.
 
 			/varcalc acttgt ${acttgt} + 1
 
@@ -205,7 +205,7 @@ sub Check_Auto_Move() {
 			/goto :AcquireTarget
 		}
 
-		/varset movtmr 3s
+		/varset movtmr 5s
 
 		/stick ID ${id} ${gl_assdis}		
 
@@ -225,8 +225,8 @@ sub Event_Auto(string line) {
 
 		/if (${Me.Name.Equal[${pckldr}]}) {
 
-			/if (!${fwlgid}) /bc follow ${Me.ID}
-			/if (!${ismedg}) /bc med
+			/bc follow ${Me.ID}
+			/bc med
 		}
 		
 	} else {
@@ -236,10 +236,4 @@ sub Event_Auto(string line) {
 	}
 
 	/return
-}
-
-#event Cannot_Hit "You can't hit them from here."
-sub Event_Cannot_Hit(string line) {
-	
-
 }
