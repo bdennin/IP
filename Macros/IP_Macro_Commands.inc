@@ -1,8 +1,6 @@
 
 sub Cast(string name, string gem, int ID) {
 
-	/varset gl_brkcst false
-
 	/if (${Me.CurrentMana} < ${Spell[${name}].Mana} + 200) /return 0
 
 	/tar ID ${ID}
@@ -14,17 +12,6 @@ sub Cast(string name, string gem, int ID) {
 	:MonitorCasting
 
 	/if (${Me.Casting.ID}) {
-
-		/doevents End_Macro
-		/doevents Follow
-		/doevents Gate
-		/doevents Warp
-
-		/if (${gl_brkcst}) {
-
-			/interrupt
-			/goto :DoneCasting
-		} 
 
 		/if (${Target.Type.Equal["Corpse"]}) {
 

@@ -1,10 +1,10 @@
 
 sub Setup_Auto() {
 	
-	/declare buftmr	timer 	outer 30m
-	/declare movtmr timer 	outer 0s
-
 	/declare pckldr string 	outer "Hrelgar"
+
+	/declare buftmr	timer 	outer 30m
+	/declare movtmr timer 	outer 0
 
 	/declare begmed int 	outer 20
 	/declare endmed int 	outer 90

@@ -17,14 +17,17 @@ sub Setup() {
 
 sub Setup_Global() {
 	
-	/declare gl_dmgtmr		 	timer  	outer	0s
-	/declare gl_zontmr 			timer 	outer 	0s
-
-	/declare gl_myclas		 	string 	outer 	"${Me.Class}"
+	/declare gl_setini 			string 	outer 	"Settings/Settings.ini"
+	/declare gl_botini 			string 	outer 	"Bots/${MacroQuest.Server}_${Me.Name}_${Me.Class}"
 	/declare gl_splset			string	outer	"jim"
 	/declare gl_curzon			string 	outer 	"0"
 
+	/declare gl_cbttmr 			timer 	outer 	0s
+	/declare gl_dmgtmr		 	timer  	outer	0s
+	/declare gl_zontmr 			timer 	outer 	0s
+
 	/declare gl_comdis		 	float 	outer 	500.0
+	/declare gl_rngdis 			float 	outer 	125.0
 	/declare gl_spldis			float	outer 	100.0
 	/declare gl_lshdis 			float 	outer 	30.0
 	/declare gl_foldis			float 	outer 	10.0
@@ -38,15 +41,16 @@ sub Setup_Global() {
 	/declare gl_isfwlg		 	bool 	outer	false
 	/declare gl_isastg		 	bool 	outer	false
 	/declare gl_ismedg		 	bool 	outer	false
-	/declare gl_brkcst			bool 	outer	false
 
 	/return
 }
 
 sub Setup_Class() {
 
-	/declare gl_qkbufs[4,4] 	string	outer 	"0"
-	/declare gl_tgtbfs[3,4] 	string	outer 	"0"
+	/declare gl_qckbfs[4,4] 	string	outer 	"0"
+	/declare gl_tgtbfs[4,4] 	string	outer 	"0"
+	/declare gl_petbfs[4,4] 	string 	outer 	"0"
+	/declare gl_debufs[4,4] 	string 	outer 	"0"
 	/declare gl_cbtabl[6] 		string	outer 	"0"
 
 	/declare gl_assdir			string 	outer	"0"
@@ -56,10 +60,10 @@ sub Setup_Class() {
 	/declare gl_hotspl 			string 	outer 	"0"
 	/declare gl_nukspl 			string 	outer 	"0"
 	/declare gl_petspl 			string 	outer 	"0"
-	/declare gl_petbuf 			string 	outer 	"0"
 
 	/declare gl_nmqkbf			int 	outer 	0
 	/declare gl_nmtgbf 			int 	outer 	0
+	/declare gl_nmptbf 			int 	outer 	0
 	/declare gl_nmabls			int 	outer 	0
 	
 	/declare gl_helpct		 	int 	outer 	0
@@ -73,15 +77,16 @@ sub Setup_Class() {
 	/declare gl_ismele		 	bool 	outer	false
 	/declare gl_iscstr			bool 	outer	false
 	/declare gl_istank			bool 	outer	false
+	/declare gl_isrngd 			bool 	outer 	false
 	/declare gl_shdmed			bool 	outer	false
 
-	/if (${gl_myclas.Equal["Shadow Knight"]}) {
+	/if (${Me.Class.Name.Equal["Shadow Knight"]}) {
 
 		/call "Init_Shadow_Knight"
 
 	} else {
 
-		/call "Init_${gl_myclas}"
+		/call "Init_${Me.Class.Name}"
 	}
 
 	/return
@@ -89,8 +94,10 @@ sub Setup_Class() {
 
 sub Init_Bard() {
 		
-	/varset gl_qkbufs[4,4] 	"0"
-	/varset gl_tgtbfs[2,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_tgtbfs[4,4] 	"0"
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"behind"
@@ -100,10 +107,10 @@ sub Init_Bard() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
@@ -117,6 +124,7 @@ sub Init_Bard() {
 	/varset gl_ismele 		true
 	/varset gl_iscstr 		false
 	/varset gl_istank 		false
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		false
 
 	/return
@@ -124,8 +132,10 @@ sub Init_Bard() {
 
 sub Init_Beastlord() {
 		
-	/varset gl_qkbufs[4,4] 	"0"
-	/varset gl_tgtbfs[2,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_tgtbfs[4,4] 	"0"
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"behind"
@@ -135,10 +145,10 @@ sub Init_Beastlord() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
@@ -152,6 +162,7 @@ sub Init_Beastlord() {
 	/varset gl_ismele 		true
 	/varset gl_iscstr 		true
 	/varset gl_istank 		false
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		true
 
 	/return
@@ -159,8 +170,10 @@ sub Init_Beastlord() {
 
 sub Init_Berserker() {
 
-	/varset gl_qkbufs[4,4] 	"0"
-	/varset gl_tgtbfs[2,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_tgtbfs[4,4] 	"0"
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"behind"
@@ -170,10 +183,10 @@ sub Init_Berserker() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
@@ -187,6 +200,7 @@ sub Init_Berserker() {
 	/varset gl_ismele 		true
 	/varset gl_iscstr 		false
 	/varset gl_istank 		false
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		false
 
 	/return
@@ -194,7 +208,7 @@ sub Init_Berserker() {
 
 sub Init_Cleric() {
 
-	/varset gl_qkbufs[4,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
 
 	/varset gl_tgtbfs[1,1] 	"Hand of Virtue"
 	/varset gl_tgtbfs[1,2] 	"Hrelgar"
@@ -206,6 +220,8 @@ sub Init_Cleric() {
 	/varset gl_tgtbfs[2,3] 	"5"
 	/varset gl_tgtbfs[2,4] 	"${Spell[${gl_tgtbfs[1,1]}].ID}"
 
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"behind"
@@ -215,10 +231,10 @@ sub Init_Cleric() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		2
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		70
@@ -232,6 +248,7 @@ sub Init_Cleric() {
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
 	/varset gl_istank		false
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -239,8 +256,10 @@ sub Init_Cleric() {
 
 sub Init_Druid() {
 
-	/varset gl_qkbufs[4,4] 	"0"
-	/varset gl_tgtbfs[2,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_tgtbfs[4,4] 	"0"
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"behind"
@@ -250,10 +269,10 @@ sub Init_Druid() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
@@ -267,6 +286,7 @@ sub Init_Druid() {
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
 	/varset gl_istank		false
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -274,8 +294,10 @@ sub Init_Druid() {
 
 sub Init_Enchanter() {
 
-	/varset gl_qkbufs[4,4] 	"0"
-	/varset gl_tgtbfs[2,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_tgtbfs[4,4] 	"0"
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"behind"
@@ -285,10 +307,10 @@ sub Init_Enchanter() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
@@ -302,6 +324,7 @@ sub Init_Enchanter() {
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
 	/varset gl_istank		false
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -309,8 +332,10 @@ sub Init_Enchanter() {
 
 sub Init_Magician() {
 
-	/varset gl_qkbufs[4,4] 	"0"
-	/varset gl_tgtbfs[2,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_tgtbfs[4,4] 	"0"
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"behind"
@@ -320,10 +345,10 @@ sub Init_Magician() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
@@ -337,6 +362,7 @@ sub Init_Magician() {
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
 	/varset gl_istank		false
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -344,8 +370,10 @@ sub Init_Magician() {
 
 sub Init_Monk() {
 	
-	/varset gl_qkbufs[4,4] 	"0"
-	/varset gl_tgtbfs[2,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_tgtbfs[4,4] 	"0"
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[1] 	"Flying Kick"
 
 	/varset gl_assdir		"behind"
@@ -355,10 +383,10 @@ sub Init_Monk() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		1
 	
 	/varset gl_helpct 		0
@@ -372,6 +400,7 @@ sub Init_Monk() {
 	/varset gl_ismele		true
 	/varset gl_iscstr		false
 	/varset gl_istank		false
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		false
 	
 	/return
@@ -379,8 +408,10 @@ sub Init_Monk() {
 
 sub Init_Necromancer() {
 
-	/varset gl_qkbufs[4,4] 	"0"
-	/varset gl_tgtbfs[2,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_tgtbfs[4,4] 	"0"
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"behind"
@@ -390,10 +421,10 @@ sub Init_Necromancer() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
@@ -407,6 +438,7 @@ sub Init_Necromancer() {
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
 	/varset gl_istank		false
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -414,8 +446,10 @@ sub Init_Necromancer() {
 
 sub Init_Paladin() {
 
-	/varset gl_qkbufs[4,4] 	"0"
-	/varset gl_tgtbfs[2,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_tgtbfs[4,4] 	"0"
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"front"
@@ -425,10 +459,10 @@ sub Init_Paladin() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
@@ -442,6 +476,7 @@ sub Init_Paladin() {
 	/varset gl_ismele		true
 	/varset gl_iscstr		true
 	/varset gl_istank		true
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -449,8 +484,10 @@ sub Init_Paladin() {
 
 sub Init_Ranger() {
 
-	/varset gl_qkbufs[4,4] 	"0"
-	/varset gl_tgtbfs[2,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_tgtbfs[4,4] 	"0"
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"behind"
@@ -460,10 +497,10 @@ sub Init_Ranger() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
@@ -477,15 +514,18 @@ sub Init_Ranger() {
 	/varset gl_ismele		true
 	/varset gl_iscstr		true
 	/varset gl_istank		false
-	/varset gl_shdmed 		true
+	/varset gl_isrngd 		false
+	/varset gl_shdmed 		false
 	
 	/return
 }
 
 sub Init_Rogue() {
 
-	/varset gl_qkbufs[4,4] 	"0"
-	/varset gl_tgtbfs[2,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_tgtbfs[4,4] 	"0"
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"behind"
@@ -495,10 +535,10 @@ sub Init_Rogue() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
@@ -512,6 +552,7 @@ sub Init_Rogue() {
 	/varset gl_ismele		true
 	/varset gl_iscstr		false
 	/varset gl_istank		false
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		false
 	
 	/return
@@ -519,8 +560,10 @@ sub Init_Rogue() {
 
 sub Init_Shadow_Knight() {
 
-	/varset gl_qkbufs[4,4] 	"0"
-	/varset gl_tgtbfs[2,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_tgtbfs[4,4] 	"0"
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"behind"
@@ -530,10 +573,10 @@ sub Init_Shadow_Knight() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
@@ -547,6 +590,7 @@ sub Init_Shadow_Knight() {
 	/varset gl_ismele		true
 	/varset gl_iscstr		true
 	/varset gl_istank		true
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -554,25 +598,25 @@ sub Init_Shadow_Knight() {
 
 sub Init_Shaman() {
 
-	/varset gl_qkbufs[1,1] "Talisman of Celerity"
-	/varset gl_qkbufs[1,2] "Hrelgar"
-	/varset gl_qkbufs[1,3] "6"
-	/varset gl_qkbufs[1,4] "${Spell[${gl_qkbufs[1,1]}].ID}"
+	/varset gl_qckbfs[1,1] "Talisman of Celerity"
+	/varset gl_qckbfs[1,2] "Hrelgar"
+	/varset gl_qckbfs[1,3] "6"
+	/varset gl_qckbfs[1,4] "${Spell[${gl_qckbfs[1,1]}].ID}"
 
-	/varset gl_qkbufs[2,1] "Talisman of Celerity"
-	/varset gl_qkbufs[2,2] "Malachi"
-	/varset gl_qkbufs[2,3] "6"
-	/varset gl_qkbufs[2,4] "${Spell[${gl_qkbufs[2,1]}].ID}"
+	/varset gl_qckbfs[2,1] "Talisman of Celerity"
+	/varset gl_qckbfs[2,2] "Malachi"
+	/varset gl_qckbfs[2,3] "6"
+	/varset gl_qckbfs[2,4] "${Spell[${gl_qckbfs[2,1]}].ID}"
 
-	/varset gl_qkbufs[3,1] "Spirit of the Leopard"
-	/varset gl_qkbufs[3,2] "Hrelgar"
-	/varset gl_qkbufs[3,3] "7"
-	/varset gl_qkbufs[3,4] "${Spell[${gl_qkbufs[3,1]}].ID}"
+	/varset gl_qckbfs[3,1] "Spirit of the Leopard"
+	/varset gl_qckbfs[3,2] "Hrelgar"
+	/varset gl_qckbfs[3,3] "7"
+	/varset gl_qckbfs[3,4] "${Spell[${gl_qckbfs[3,1]}].ID}"
 
-	/varset gl_qkbufs[4,1] "Spirit of the Leopard"
-	/varset gl_qkbufs[4,2] "Malachi"
-	/varset gl_qkbufs[4,3] "7"
-	/varset gl_qkbufs[4,4] "${Spell[${gl_qkbufs[3,1]}].ID}"
+	/varset gl_qckbfs[4,1] "Spirit of the Leopard"
+	/varset gl_qckbfs[4,2] "Malachi"
+	/varset gl_qckbfs[4,3] "7"
+	/varset gl_qckbfs[4,4] "${Spell[${gl_qckbfs[4,1]}].ID}"
 
 	/varset gl_tgtbfs[1,1] "Spirit of Bih`li"
 	/varset gl_tgtbfs[1,2] "Hrelgar"
@@ -589,6 +633,17 @@ sub Init_Shaman() {
 	/varset gl_tgtbfs[3,3] "3"
 	/varset gl_tgtbfs[3,4] "${Spell[${gl_tgtbfs[3,1]}].ID}"
 
+	/varset gl_petbfs[1,1] "Spirit Quickening"
+	/varset gl_petbfs[1,2] "Pet"
+	/varset gl_petbfs[1,3] "4"
+	/varset gl_petbfs[1,4] "${Spell[${gl_petbfs[1,1]}].ID}"
+
+	/varset gl_petbfs[2,1] "Spirit of the Leopard"
+	/varset gl_petbfs[2,2] "Pet"
+	/varset gl_petbfs[2,3] "7"
+	/varset gl_petbfs[2,4] "${Spell[${gl_petbfs[2,1]}].ID}"
+
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"behind"
@@ -598,10 +653,10 @@ sub Init_Shaman() {
 	/varset gl_hotspl 		"Quiescence"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"True Spirit"
-	/varset gl_petbuf 		"Swift Like the Wind"
 
 	/varset gl_nmqkbf 		4
 	/varset gl_nmtgbf 		3
+	/varset gl_nmptbf 		2
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
@@ -615,6 +670,7 @@ sub Init_Shaman() {
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
 	/varset gl_istank		false
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -622,8 +678,10 @@ sub Init_Shaman() {
 
 sub Init_Warrior() {
 
-	/varset gl_qkbufs[4,4] 	"0"
-	/varset gl_tgtbfs[2,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_tgtbfs[4,4] 	"0"
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	
 	/varset gl_cbtabl[1] 	"Kick"
 	/varset gl_cbtabl[2] 	"Taunt"
@@ -635,10 +693,10 @@ sub Init_Warrior() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		2
 	
 	/varset gl_helpct 		0
@@ -652,6 +710,7 @@ sub Init_Warrior() {
 	/varset gl_ismele		true
 	/varset gl_iscstr		false
 	/varset gl_istank		true
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		false
 	
 	/return
@@ -659,8 +718,10 @@ sub Init_Warrior() {
 
 sub Init_Wizard() {
 
-	/varset gl_qkbufs[4,4] 	"0"
-	/varset gl_tgtbfs[2,4] 	"0"
+	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_tgtbfs[4,4] 	"0"
+	/varset gl_petbfs[4,4] 	"0"
+	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
 	/varset gl_assdir		"behind"
@@ -670,10 +731,10 @@ sub Init_Wizard() {
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"Lure of Frost"
 	/varset gl_petspl 		"0"
-	/varset gl_petbuf 		"0"
 
 	/varset gl_nmqkbf 		0
 	/varset gl_nmtgbf 		0
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
@@ -687,6 +748,7 @@ sub Init_Wizard() {
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
 	/varset gl_istank		false
+	/varset gl_isrngd 		false
 	/varset gl_shdmed 		true
 	
 	/return

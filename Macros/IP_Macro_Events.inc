@@ -54,14 +54,6 @@ sub Event_Assist(string line, string sender, int ID) {
 			/varset gl_isastg true
 
 			/if (${gl_isfwlg}) /stick off
-
-			/if (${gl_ismele}) {
-
-				/tar ID ${gl_asstid}
-				/delay 1
-				/stick ID ${gl_asstid} ${gl_assdis} ${gl_assdir}
-				/attack on
-			}
 		}
 	} 
 
@@ -77,11 +69,11 @@ sub Event_Buff(string line, string sender, int ID) {
 
 		/if (${Spawn[ID ${ID}].ID} && ${Spawn[ID ${ID}].Distance} < ${gl_comdis}) {
 
-			/bc Buffing ${ID}.
+			/bc Buffing ${Spawn[ID ${ID}].Name}.
 
 			/declare i int local
 
-			/if (${gl_isfwlg}) /stick off
+			/if (${gl_isfwlg}) /afollow pause
 
 			/for i 1 to ${gl_nmtgbf}
 
@@ -98,12 +90,9 @@ sub Event_Buff(string line, string sender, int ID) {
 
 			/next i
 
-			/bc Done buffing ${ID}.
-			
-			/if (${gl_isfwlg}) {
+			/bc Done buffing ${Spawn[ID ${ID}].Name}.
 
-				/stick ID ${gl_fwlgid} ${gl_foldis}
-			}
+			/if (${gl_isfwlg}) /afollow unpause
 		}
 	} 
 
@@ -144,8 +133,6 @@ sub Event_End_Follow(string line, string sender) {
 
 #event End_Macro "#*# seconds to prepare your camp."
 sub Event_End_Macro(string line) {
-	
-	/varset gl_brkcst true
 
 	/endmacro
 
@@ -160,7 +147,6 @@ sub Event_Follow(string line, int ID) {
 	/if (${Spawn[ID ${ID}].ID} && ${Spawn[ID ${ID}].Distance} < ${gl_comdis}) {
 
 		/varset gl_isfwlg true
-		/varset gl_brkcst true
 		/varset gl_fwlgid ${ID}
 
 		/stick ID ${gl_fwlgid} ${gl_foldis}
@@ -173,8 +159,6 @@ sub Event_Follow(string line, int ID) {
 sub Event_Gate(string line) {
 
 	/if (${Me.AltAbilityReady[Origin]}) {
-
-		/varset gl_brkcst true
 		
 		/aa act origin
 	}
@@ -182,8 +166,8 @@ sub Event_Gate(string line) {
 	/return
 } 
 
-#event Loot_Corpses "<#*#> loot corpses"
-sub Event_Loot_Corpses(string line) {
+#event Loot "<#*#> loot"
+sub Event_Loot(string line) {
 	
 	:LootCorpse 
 
@@ -268,13 +252,9 @@ sub Event_Start_Enrage(string line) {
 	/return
 } 
 
-#event Take_Damage "#1# hits YOU for #*# points of damage."
-#event Take_Damage "#1# kicks YOU for #*# points of damage."
-#event Take_Damage "#1# strikes YOU for #*# points of damage."
-#event Take_Damage "#1# crushes YOU for #*# points of damage."
-#event Take_Damage "#1# bites YOU for #*# points of damage."
+#event Take_Damage "#1# YOU for #*# points of damage."
 sub Event_Take_Damage(string line) {
-	
+
 	/if (${Me.Class.Name.Equal["Monk"]}) {
 
 		/if (${Me.AbilityReady["Feign Death"]}) {
@@ -302,8 +282,6 @@ sub Event_Warp(string line, string sender, int ID) {
 		/if (${Spawn[ID ${ID}].ID}) {
 
 			:WarpLoop
-
-			/varset gl_brkcst true
 
 			/if (${Spawn[ID ${ID}].Distance} > ${gl_wrpdis}) {
 
