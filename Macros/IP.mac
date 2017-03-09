@@ -24,3 +24,8 @@ sub Main() {
 
 	/return
 }
+
+
+|Add auto-assist
+|Add netfollow
+|Fix ranged assist

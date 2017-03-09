@@ -408,9 +408,18 @@ sub Init_Monk() {
 
 sub Init_Necromancer() {
 
-	/varset gl_qckbfs[4,4] 	"0"
+	/varset gl_qckbfs[1,1] "Call of Bones"
+	/varset gl_qckbfs[1,2] "Phylum"
+	/varset gl_qckbfs[1,3] "4"
+	/varset gl_qckbfs[1,4] "${Spell[${gl_qckbfs[1,1]}].ID}"
+
 	/varset gl_tgtbfs[4,4] 	"0"
-	/varset gl_petbfs[4,4] 	"0"
+
+	/varset gl_petbfs[1,1] "Augment Death"
+	/varset gl_petbfs[1,2] "Phylum"
+	/varset gl_petbfs[1,3] "5"
+	/varset gl_petbfs[1,4] "${Spell[${gl_petbfs[1,1]}].ID}"
+
 	/varset gl_debufs[4,4]	"0"
 	/varset gl_cbtabl[6] 	"0"
 
@@ -419,12 +428,12 @@ sub Init_Necromancer() {
 	/varset gl_ghlspl 		"0"
 	/varset gl_thlspl		"0"
 	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
+	/varset gl_nukspl 		"Torbas' Acid Blast"
+	/varset gl_petspl 		"Malignant Dead"
 
-	/varset gl_nmqkbf 		0
+	/varset gl_nmqkbf 		1
 	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		0
+	/varset gl_nmptbf 		1
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0
@@ -432,8 +441,8 @@ sub Init_Necromancer() {
 
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		0
+	/varset gl_nukgem 		2
+	/varset gl_petgem 		6
 
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
@@ -652,11 +661,11 @@ sub Init_Shaman() {
 	/varset gl_thlspl		"0"
 	/varset gl_hotspl 		"Quiescence"
 	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"True Spirit"
+	/varset gl_petspl 		"0"
 
 	/varset gl_nmqkbf 		4
 	/varset gl_nmtgbf 		3
-	/varset gl_nmptbf 		2
+	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
 	/varset gl_helpct 		0

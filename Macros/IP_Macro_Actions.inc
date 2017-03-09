@@ -336,18 +336,24 @@ sub Check_Attack() {
 		/tar ID ${gl_asstid}
 		/delay 1
 
-		/stick ID ${gl_asstid} ${gl_assdis} ${gl_assdir}
+		/stick moveback ID ${gl_asstid} ${gl_assdis} ${gl_assdir}
 		/attack on
-	}
 
-	/if (${gl_isrngd}) {
+	} else /if (${gl_isrngd}) {
 
 		/tar ID ${gl_asstid}
 		/delay 1
 
-		/stick ID ${gl_asstid} ${gl_rngdis}
+		/stick moveback ID ${gl_asstid} ${gl_rngdis}
 		
 		/if (${Me.RangedReady})	/ranged
+	}
+
+	/if (${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
+
+		/varset gl_asstid 0
+		/varset gl_isastg false
+		/echo tru
 	}
 
 	/return

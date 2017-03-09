@@ -11,7 +11,7 @@ sub Check_Events() {
 	/doevents End_Macro
 	/doevents Follow
 	/doevents Gate
-	/doevents Loot_Corpses
+	/doevents Loot
 	/doevents Med
 	/doevents Start_Enrage
 	/doevents Take_Damage
@@ -161,6 +161,8 @@ sub Event_Gate(string line) {
 	/if (${Me.AltAbilityReady[Origin]}) {
 		
 		/aa act origin
+
+		/delay 10s
 	}
 
 	/return

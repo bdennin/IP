@@ -62,6 +62,8 @@ sub Check_Auto_Danger() {
 
 	/if (${Target.ID} && ${Target.Distance} < ${gl_foldis}) {
 
+		/if (${Target.Type.Equal["Corpse"]}) /return 0
+
 		/if (${Target.ID} != ${gl_asstid}) {
 			
 			/echo Auto :: Target was first to attack me.
@@ -231,7 +233,11 @@ sub Event_Auto(string line) {
 		
 	} else {
 
-		/varset atomat false
+		/varset atomat 		false
+
+		/varset gl_isastg 	false
+		/varset gl_asstid 	0
+
 		/echo Automation disabled.
 	}
 
