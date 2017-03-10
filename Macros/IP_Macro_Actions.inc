@@ -162,7 +162,7 @@ sub Check_Group_Heals() {
 
 		/declare cncbts 	string 	local 	${NetBots.Client}
 		/declare netbot 	string 	local 	"0"
-		/declare botcnt 	int 	local	0
+		/declare helcnt 	int 	local	0
 		/declare i 			int 	local
 
 		/for i 1 to ${NetBots.Counts} 
@@ -173,13 +173,13 @@ sub Check_Group_Heals() {
 
 				/if (${NetBots[${netbot}].PctHPs} < ${gl_ghlpct}) {
 
-					/varset botcnt ${botcnt} + 1
+					/varcalc helcnt ${helcnt} + 1
 				}
 			}
 
 		/next i
 
-		/if (${botcnt} > 1) {
+		/if (${helcnt} > 1) {
 
 			/call Cast ${gl_ghlspl} ${gl_ghlgem} ${Me.ID}
 

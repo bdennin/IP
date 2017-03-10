@@ -235,7 +235,7 @@ sub Init_Cleric() {
 
 	/varset gl_assdir		"behind"
 
-	/varset gl_ghlspl 		"0"
+	/varset gl_ghlspl 		"Word of Vigor"
 	/varset gl_thlspl		"Holy Light"
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
@@ -245,7 +245,8 @@ sub Init_Cleric() {
 	/varset gl_nmtgbf 		2
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
-	
+	/varset gl_nmghlt 		3
+
 	/varset gl_ghlpct 		60
 	/varset gl_helpct 		75
 	/varset gl_hotpct 		0

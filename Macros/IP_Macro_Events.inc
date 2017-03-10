@@ -10,6 +10,7 @@ sub Check_Events() {
 	/doevents End_Follow
 	/doevents End_Macro
 	/doevents Follow
+	/doevents Character_Flag
 	/doevents Gate
 	/doevents Loot
 	/doevents Med
@@ -95,6 +96,14 @@ sub Event_Buff(string line, string sender, int ID) {
 			/if (${gl_isfwlg}) /afollow unpause
 		}
 	} 
+
+	/return
+}
+
+#event Character_Flag "#*# receive a character flag!"
+sub Event_Character_Flag(string line) {
+
+	/bc I received a character flag!
 
 	/return
 }
