@@ -71,6 +71,7 @@ sub Setup_Class() {
 	/declare gl_helpct		 	int 	outer 	0
 	/declare gl_hotpct 			int 	outer 	0
 
+	/declare gl_ghlgem 			int 	outer	0
 	/declare gl_helgem 			int 	outer 	0
 	/declare gl_hotgem 			int 	outer 	0
 	/declare gl_nukgem 			int 	outer 	0
@@ -119,6 +120,7 @@ sub Init_Bard() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
@@ -158,6 +160,7 @@ sub Init_Beastlord() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
@@ -197,6 +200,7 @@ sub Init_Berserker() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
@@ -246,6 +250,7 @@ sub Init_Cleric() {
 	/varset gl_helpct 		75
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		3
 	/varset gl_helgem 		1
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
@@ -285,6 +290,7 @@ sub Init_Druid() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
@@ -324,6 +330,7 @@ sub Init_Enchanter() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
@@ -363,6 +370,7 @@ sub Init_Magician() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
@@ -402,6 +410,7 @@ sub Init_Monk() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
@@ -450,6 +459,7 @@ sub Init_Necromancer() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
@@ -489,6 +499,7 @@ sub Init_Paladin() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
@@ -528,6 +539,7 @@ sub Init_Ranger() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
@@ -567,6 +579,7 @@ sub Init_Rogue() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
@@ -606,6 +619,7 @@ sub Init_Shadow_Knight() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
@@ -707,6 +721,7 @@ sub Init_Shaman() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		80
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		1
 	/varset gl_nukgem 		0
@@ -748,6 +763,7 @@ sub Init_Warrior() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
@@ -787,6 +803,7 @@ sub Init_Wizard() {
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
+	/varset gl_ghlgem 		0
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		1
