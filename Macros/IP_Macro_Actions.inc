@@ -179,7 +179,7 @@ sub Check_Group_Heals() {
 
 		/next i
 
-		/if (${helcnt} > 1) {
+		/if (${helcnt} > ${gl_nmghlt}) {
 
 			/call Cast ${gl_ghlspl} ${gl_ghlgem} ${Me.ID}
 

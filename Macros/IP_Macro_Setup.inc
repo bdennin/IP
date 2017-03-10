@@ -66,6 +66,7 @@ sub Setup_Class() {
 	/declare gl_nmtgbf 			int 	outer 	0
 	/declare gl_nmptbf 			int 	outer 	0
 	/declare gl_nmabls			int 	outer 	0
+	/declare gl_nmghlt 			int 	outer 	0
 	
 	/declare gl_ghlpct 			int 	outer 	0
 	/declare gl_helpct		 	int 	outer 	0
@@ -115,7 +116,8 @@ sub Init_Bard() {
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
-	
+	/varset gl_nmghlt 		0
+
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
@@ -155,6 +157,7 @@ sub Init_Beastlord() {
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
+	/varset gl_nmghlt 		0
 	
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
@@ -195,6 +198,7 @@ sub Init_Berserker() {
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
+	/varset gl_nmghlt 		0
 	
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
@@ -245,9 +249,9 @@ sub Init_Cleric() {
 	/varset gl_nmtgbf 		2
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
-	/varset gl_nmghlt 		3
+	/varset gl_nmghlt 		2
 
-	/varset gl_ghlpct 		60
+	/varset gl_ghlpct 		95
 	/varset gl_helpct 		75
 	/varset gl_hotpct 		0
 
@@ -286,6 +290,7 @@ sub Init_Druid() {
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
+	/varset gl_nmghlt 		0
 	
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
@@ -326,6 +331,7 @@ sub Init_Enchanter() {
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
+	/varset gl_nmghlt 		0
 	
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
@@ -366,6 +372,7 @@ sub Init_Magician() {
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
+	/varset gl_nmghlt 		0
 	
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
@@ -406,6 +413,7 @@ sub Init_Monk() {
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		1
+	/varset gl_nmghlt 		0
 	
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
@@ -455,6 +463,7 @@ sub Init_Necromancer() {
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		1
 	/varset gl_nmabls 		0
+	/varset gl_nmghlt 		0
 	
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
@@ -495,6 +504,7 @@ sub Init_Paladin() {
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
+	/varset gl_nmghlt 		0
 	
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
@@ -535,6 +545,7 @@ sub Init_Ranger() {
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
+	/varset gl_nmghlt 		0
 	
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
@@ -575,6 +586,7 @@ sub Init_Rogue() {
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
+	/varset gl_nmghlt 		0
 	
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
@@ -615,6 +627,7 @@ sub Init_Shadow_Knight() {
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
+	/varset gl_nmghlt 		0
 	
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
@@ -717,6 +730,7 @@ sub Init_Shaman() {
 	/varset gl_nmtgbf 		3
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
+	/varset gl_nmghlt 		0
 	
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
@@ -759,6 +773,7 @@ sub Init_Warrior() {
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		2
+	/varset gl_nmghlt 		0
 	
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
@@ -799,6 +814,7 @@ sub Init_Wizard() {
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
+	/varset gl_nmghlt 		0
 	
 	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
