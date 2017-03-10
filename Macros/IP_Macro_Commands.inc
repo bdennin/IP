@@ -12,20 +12,17 @@ sub Cast(string name, string gem, int ID) {
 	:MonitorCasting
 
 	/if (${Me.Casting.ID}) {
+			
+		/if (${Spawn[ID ${ID}].Type.Equal["Corpse"]} || ${Spawn[ID ${ID}].Distance} > ${gl_spldis}) {
 
-		/if (${Target.Type.Equal["Corpse"]}) {
-
-			/interrupt
-			/goto :DoneCasting
-		}
-
-		/if (${Target.Distance} > ${gl_spldis}) {
+			/echo breaking cast
 
 			/interrupt
 			/goto :DoneCasting
-		}
+		
+		} 
 
-		/delay 3
+		/delay 1
 		/goto :MonitorCasting
 	}
  	

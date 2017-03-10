@@ -5,6 +5,8 @@ sub Setup_Auto() {
 
 	/declare buftmr	timer 	outer 30m
 	/declare movtmr timer 	outer 0
+	/declare baktmr timer 	outer 0
+	/declare rndtmr timer 	outer 0
 
 	/declare begmed int 	outer 20
 	/declare endmed int 	outer 90
@@ -55,14 +57,12 @@ sub Check_Auto_Actions() {
 }
 
 sub Check_Auto_Danger() {
-	
+
 	/declare nrstid int local 
 
 	/varset nrstid ${NearestSpawn["NPC"].ID}
 
 	/if (${Target.ID} && ${Target.Distance} < ${gl_foldis}) {
-
-		/if (${Target.Type.Equal["Corpse"]}) /return 0
 
 		/if (${Target.ID} != ${gl_asstid}) {
 			
@@ -223,13 +223,15 @@ sub Event_Auto(string line) {
 	/if (!${atomat}) {
 
 		/varset atomat true
-		/echo Automation enabled.
 
 		/if (${Me.Name.Equal[${pckldr}]}) {
 
 			/bc follow ${Me.ID}
-			/bc med
 		}
+
+		/if (${gl_shdmed}) /varset gl_ismedg true
+
+		/echo Automation enabled.
 		
 	} else {
 

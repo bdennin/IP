@@ -146,6 +146,8 @@ sub Event_Follow(string line, int ID) {
 
 	/if (${Spawn[ID ${ID}].ID} && ${Spawn[ID ${ID}].Distance} < ${gl_comdis}) {
 
+		/interrupt
+
 		/varset gl_isfwlg true
 		/varset gl_fwlgid ${ID}
 
@@ -160,6 +162,8 @@ sub Event_Gate(string line) {
 
 	/if (${Me.AltAbilityReady[Origin]}) {
 		
+		/interrupt
+
 		/aa act origin
 
 		/delay 10s
@@ -269,7 +273,7 @@ sub Event_Take_Damage(string line) {
 		}
 	}
 
-	/varset gl_dmgtmr 6s
+	/varset gl_dmgtmr 12s
 
 	/return
 }
@@ -286,6 +290,8 @@ sub Event_Warp(string line, string sender, int ID) {
 			:WarpLoop
 
 			/if (${Spawn[ID ${ID}].Distance} > ${gl_wrpdis}) {
+
+				/interrupt
 
 				/tar ID ${ID}
 				/delay 1

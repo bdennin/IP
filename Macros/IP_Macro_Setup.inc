@@ -29,6 +29,7 @@ sub Setup_Global() {
 	/declare gl_comdis		 	float 	outer 	500.0
 	/declare gl_rngdis 			float 	outer 	125.0
 	/declare gl_spldis			float	outer 	100.0
+	/declare gl_ghldis 			float 	outer 	50.0
 	/declare gl_lshdis 			float 	outer 	30.0
 	/declare gl_foldis			float 	outer 	10.0
 	/declare gl_assdis			float 	outer 	8.0
@@ -47,7 +48,7 @@ sub Setup_Global() {
 
 sub Setup_Class() {
 
-	/declare gl_qckbfs[4,4] 	string	outer 	"0"
+	/declare gl_qckbfs[8,4] 	string	outer 	"0"
 	/declare gl_tgtbfs[4,4] 	string	outer 	"0"
 	/declare gl_petbfs[4,4] 	string 	outer 	"0"
 	/declare gl_debufs[4,4] 	string 	outer 	"0"
@@ -66,6 +67,7 @@ sub Setup_Class() {
 	/declare gl_nmptbf 			int 	outer 	0
 	/declare gl_nmabls			int 	outer 	0
 	
+	/declare gl_ghlpct 			int 	outer 	0
 	/declare gl_helpct		 	int 	outer 	0
 	/declare gl_hotpct 			int 	outer 	0
 
@@ -113,6 +115,7 @@ sub Init_Bard() {
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
@@ -151,6 +154,7 @@ sub Init_Beastlord() {
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
@@ -189,6 +193,7 @@ sub Init_Berserker() {
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
@@ -218,7 +223,7 @@ sub Init_Cleric() {
 	/varset gl_tgtbfs[2,1] 	"Aura of Reverence"
 	/varset gl_tgtbfs[2,2] 	"Hrelgar"
 	/varset gl_tgtbfs[2,3] 	"5"
-	/varset gl_tgtbfs[2,4] 	"${Spell[${gl_tgtbfs[1,1]}].ID}"
+	/varset gl_tgtbfs[2,4] 	"${Spell[${gl_tgtbfs[2,1]}].ID}"
 
 	/varset gl_petbfs[4,4] 	"0"
 	/varset gl_debufs[4,4]	"0"
@@ -227,7 +232,7 @@ sub Init_Cleric() {
 	/varset gl_assdir		"behind"
 
 	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"Complete Heal"
+	/varset gl_thlspl		"Holy Light"
 	/varset gl_hotspl 		"0"
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
@@ -237,10 +242,11 @@ sub Init_Cleric() {
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
-	/varset gl_helpct 		70
+	/varset gl_ghlpct 		60
+	/varset gl_helpct 		75
 	/varset gl_hotpct 		0
 
-	/varset gl_helgem 		2
+	/varset gl_helgem 		1
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
 	/varset gl_petgem 		0
@@ -275,6 +281,7 @@ sub Init_Druid() {
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
@@ -313,6 +320,7 @@ sub Init_Enchanter() {
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
@@ -351,6 +359,7 @@ sub Init_Magician() {
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
@@ -389,6 +398,7 @@ sub Init_Monk() {
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		1
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
@@ -408,14 +418,14 @@ sub Init_Monk() {
 
 sub Init_Necromancer() {
 
-	/varset gl_qckbfs[1,1] "Call of Bones"
+	/varset gl_qckbfs[1,1] "Ancient: Seduction of Chaos"
 	/varset gl_qckbfs[1,2] "Phylum"
-	/varset gl_qckbfs[1,3] "4"
+	/varset gl_qckbfs[1,3] "6"
 	/varset gl_qckbfs[1,4] "${Spell[${gl_qckbfs[1,1]}].ID}"
 
 	/varset gl_tgtbfs[4,4] 	"0"
 
-	/varset gl_petbfs[1,1] "Augment Death"
+	/varset gl_petbfs[1,1] "Rune of Death"
 	/varset gl_petbfs[1,2] "Phylum"
 	/varset gl_petbfs[1,3] "5"
 	/varset gl_petbfs[1,4] "${Spell[${gl_petbfs[1,1]}].ID}"
@@ -428,21 +438,22 @@ sub Init_Necromancer() {
 	/varset gl_ghlspl 		"0"
 	/varset gl_thlspl		"0"
 	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"Torbas' Acid Blast"
-	/varset gl_petspl 		"Malignant Dead"
+	/varset gl_nukspl 		""
+	/varset gl_petspl 		"Child of Bertoxxulous"
 
 	/varset gl_nmqkbf 		1
 	/varset gl_nmtgbf 		0
 	/varset gl_nmptbf 		1
 	/varset gl_nmabls 		0
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
 	/varset gl_helgem 		0
 	/varset gl_hotgem 		0
-	/varset gl_nukgem 		2
-	/varset gl_petgem 		6
+	/varset gl_nukgem 		0
+	/varset gl_petgem 		7
 
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
@@ -474,6 +485,7 @@ sub Init_Paladin() {
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
@@ -512,6 +524,7 @@ sub Init_Ranger() {
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
@@ -550,6 +563,7 @@ sub Init_Rogue() {
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
@@ -588,6 +602,7 @@ sub Init_Shadow_Knight() {
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
@@ -617,15 +632,35 @@ sub Init_Shaman() {
 	/varset gl_qckbfs[2,3] "6"
 	/varset gl_qckbfs[2,4] "${Spell[${gl_qckbfs[2,1]}].ID}"
 
-	/varset gl_qckbfs[3,1] "Spirit of the Leopard"
-	/varset gl_qckbfs[3,2] "Hrelgar"
-	/varset gl_qckbfs[3,3] "7"
+	/varset gl_qckbfs[3,1] "Talisman of Celerity"
+	/varset gl_qckbfs[3,2] "Plurbus"
+	/varset gl_qckbfs[3,3] "6"
 	/varset gl_qckbfs[3,4] "${Spell[${gl_qckbfs[3,1]}].ID}"
 
-	/varset gl_qckbfs[4,1] "Spirit of the Leopard"
-	/varset gl_qckbfs[4,2] "Malachi"
-	/varset gl_qckbfs[4,3] "7"
+	/varset gl_qckbfs[4,1] "Talisman of Celerity"
+	/varset gl_qckbfs[4,2] "Gorwynn"
+	/varset gl_qckbfs[4,3] "6"
 	/varset gl_qckbfs[4,4] "${Spell[${gl_qckbfs[4,1]}].ID}"
+
+	/varset gl_qckbfs[5,1] "Spirit of the Leopard"
+	/varset gl_qckbfs[5,2] "Hrelgar"
+	/varset gl_qckbfs[5,3] "7"
+	/varset gl_qckbfs[5,4] "${Spell[${gl_qckbfs[5,1]}].ID}"
+
+	/varset gl_qckbfs[6,1] "Spirit of the Leopard"
+	/varset gl_qckbfs[6,2] "Malachi"
+	/varset gl_qckbfs[6,3] "7"
+	/varset gl_qckbfs[6,4] "${Spell[${gl_qckbfs[6,1]}].ID}"
+
+	/varset gl_qckbfs[7,1] "Spirit of the Leopard"
+	/varset gl_qckbfs[7,2] "Plurbus"
+	/varset gl_qckbfs[7,3] "7"
+	/varset gl_qckbfs[7,4] "${Spell[${gl_qckbfs[7,1]}].ID}"
+
+	/varset gl_qckbfs[8,1] "Spirit of the Leopard"
+	/varset gl_qckbfs[8,2] "Gorwynn"
+	/varset gl_qckbfs[8,3] "7"
+	/varset gl_qckbfs[8,4] "${Spell[${gl_qckbfs[8,1]}].ID}"
 
 	/varset gl_tgtbfs[1,1] "Spirit of Bih`li"
 	/varset gl_tgtbfs[1,2] "Hrelgar"
@@ -663,11 +698,12 @@ sub Init_Shaman() {
 	/varset gl_nukspl 		"0"
 	/varset gl_petspl 		"0"
 
-	/varset gl_nmqkbf 		4
+	/varset gl_nmqkbf 		8
 	/varset gl_nmtgbf 		3
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		80
 
@@ -708,6 +744,7 @@ sub Init_Warrior() {
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		2
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 
@@ -746,6 +783,7 @@ sub Init_Wizard() {
 	/varset gl_nmptbf 		0
 	/varset gl_nmabls 		0
 	
+	/varset gl_ghlpct 		0
 	/varset gl_helpct 		0
 	/varset gl_hotpct 		0
 

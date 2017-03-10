@@ -31,6 +31,8 @@ sub Check_Actions() {
 		/if (${Macro.Return}) /return
 	}	
 
+|	/call "Check_Assists"
+
 	/if (${gl_isastg} && ${Spawn[ID ${gl_asstid}].ID}) {
 
 		/if (${Bool[${gl_petspl}]}) {
@@ -122,6 +124,15 @@ sub Check_Combat() {
 	/declare netbot 	string 	local 	"0"
 	/declare i 			int 	local
 
+	/if (${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
+
+		/varset gl_isastg false
+		/varset gl_asstid 0
+		/attack off
+
+		/keypress esc
+	}
+
 	/for i 1 to ${NetBots.Counts} 
 		
 		/varset netbot ${cncbts.Arg[${i}]}
@@ -135,8 +146,10 @@ sub Check_Combat() {
 		
 	/next i
 
-	/varset gl_isastg false
-	/varset gl_asstid 0
+	/if (${gl_isfwlg} && ${gl_ismele} && ${Spawn[ID ${gl_fwlgid}].Distance} > ${gl_foldis}) {
+
+		/stick ID ${gl_fwlgid} ${gl_foldis}
+	}
 
 	/return 
 }
@@ -144,7 +157,34 @@ sub Check_Combat() {
 sub Check_Group_Heals() {
 	
 	/if (${Bool[${gl_ghlspl}]}) {
+		
+		/if (${Me.CurrentMana} < ${Spell[${gl_ghlspl}].Mana} + 100) /return 0
 
+		/declare cncbts 	string 	local 	${NetBots.Client}
+		/declare netbot 	string 	local 	"0"
+		/declare botcnt 	int 	local	0
+		/declare i 			int 	local
+
+		/for i 1 to ${NetBots.Counts} 
+			
+			/varset netbot ${cncbts.Arg[${i}]}
+
+			/if (${Spawn[PC ${netbot}].ID} && ${Spawn[PC ${netbot}].Distance} < ${gl_ghldis}) {
+
+				/if (${NetBots[${netbot}].PctHPs} < ${gl_ghlpct}) {
+
+					/varset botcnt ${botcnt} + 1
+				}
+			}
+
+		/next i
+
+		/if (${botcnt} > 1) {
+
+			/call Cast ${gl_ghlspl} ${gl_ghlgem} ${Me.ID}
+
+			/return 1
+		}
 	}
 
 	/return 0
@@ -349,13 +389,6 @@ sub Check_Attack() {
 		/if (${Me.RangedReady})	/ranged
 	}
 
-	/if (${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
-
-		/varset gl_asstid 0
-		/varset gl_isastg false
-		/echo tru
-	}
-
 	/return
 }
 
@@ -415,7 +448,7 @@ sub Check_Cannibalize() {
 
 sub Check_Nukes() {
 	
-	/if (${Bool[${gl_nukspl}]}) {
+	/if (!${gl_dmgtmr} && ${Bool[${gl_nukspl}]}) {
 			
 		/if (${Me.CurrentMana} < ${Spell[${gl_nukspl}].Mana}) /return 0
 
