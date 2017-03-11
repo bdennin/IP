@@ -69,7 +69,7 @@ sub Check_Auto_Danger() {
 			/echo Auto :: Target was first to attack me.
 				
 			/varset gl_asstid ${Target.ID}
-			/varset gl_isastg true
+			/varset gl_incmbt true
 
 			/bc assist on ${Target.ID}
 		}
@@ -93,7 +93,7 @@ sub Check_Auto_Danger() {
 			/echo Auto :: Found target nearby.
 
 			/varset gl_asstid ${nrstid}
-			/varset gl_isastg true
+			/varset gl_incmbt true
 
 			/bc assist on ${gl_asstid}
 
@@ -237,7 +237,7 @@ sub Event_Auto(string line) {
 
 		/varset atomat 		false
 
-		/varset gl_isastg 	false
+		/varset gl_incmbt 	false
 		/varset gl_asstid 	0
 
 		/echo Automation disabled.

@@ -2,7 +2,8 @@
 sub Setup() {
 
 	/call "Setup_Global"
-	/call "Setup_Class"
+	/call "Setup_Class"	
+	
 	/call "Check_Plugins"
 
 	/squelch /tgb on
@@ -16,32 +17,58 @@ sub Setup() {
 }
 
 sub Setup_Global() {
-	
-	/declare gl_setini 			string 	outer 	"Settings/Settings.ini"
-	/declare gl_botini 			string 	outer 	"Bots/${MacroQuest.Server}_${Me.Name}_${Me.Class}"
-	/declare gl_splset			string	outer	"jim"
-	/declare gl_curzon			string 	outer 	"0"
 
-	/declare gl_cbttmr 			timer 	outer 	0s
-	/declare gl_dmgtmr		 	timer  	outer	0s
-	/declare gl_zontmr 			timer 	outer 	0s
+	/declare gl_setini 	string 	outer 	"Settings\Settings.ini"
+	/declare gl_botini 	string 	outer 	"Bots\${MacroQuest.Server}_${Me.Name}.ini"	
+	/declare gl_splset	string	outer   "0"
+	/declare gl_curzon	string 	outer 	"0"
 
-	/declare gl_comdis		 	float 	outer 	500.0
-	/declare gl_rngdis 			float 	outer 	125.0
-	/declare gl_spldis			float	outer 	100.0
-	/declare gl_ghldis 			float 	outer 	50.0
-	/declare gl_lshdis 			float 	outer 	30.0
-	/declare gl_foldis			float 	outer 	10.0
-	/declare gl_assdis			float 	outer 	8.0
-	/declare gl_spkdis 			float 	outer 	5.0
+	/declare gl_dmgtmr	timer  	outer	0s
+	/declare gl_zontmr 	timer 	outer 	0s
+		
+	/declare gl_astpct 	int 	outer 	0
+	/declare gl_fwlgid	int 	outer	0
+	/declare gl_asstid	int 	outer	0
+	/declare gl_pettid 	int 	outer 	0	
 
-	/declare gl_fwlgid			int 	outer	0
-	/declare gl_asstid			int 	outer	0
-	/declare gl_pettid 			int 	outer 	0	
+	/declare gl_comdis	float 	outer 	0.0
+	/declare gl_rngdis 	float 	outer 	0.0
+	/declare gl_spldis	float	outer	0.0
+	/declare gl_ghldis 	float 	outer	0.0
+	/declare gl_lshdis 	float 	outer	0.0
+	/declare gl_foldis	float 	outer	0.0
+	/declare gl_assdis	float 	outer	0.0
+	/declare gl_spkdis 	float 	outer	0.0
 
-	/declare gl_isfwlg		 	bool 	outer	false
-	/declare gl_isastg		 	bool 	outer	false
-	/declare gl_ismedg		 	bool 	outer	false
+	/declare gl_incmbt	bool 	outer	false
+	/declare gl_isatkg 	bool 	outer 	false
+	/declare gl_isfwlg	bool 	outer	false
+	/declare gl_ismedg	bool 	outer	false
+
+	/if (!${Ini[${gl_setini}].Length}) {
+
+		/ini ${gl_setini} "Assists" 	"Engage_Percent" 			"97"
+		/ini ${gl_setini} "Spells" 		"Spell_Set_Name" 			"jim"
+		/ini ${gl_setini} "Distances" 	"Communication_Distance" 	"500.0"
+		/ini ${gl_setini} "Distances" 	"Ranged_Attack_Distance" 	"125.0"
+		/ini ${gl_setini} "Distances" 	"Spell_Casting_Distance" 	"100.0"
+		/ini ${gl_setini} "Distances" 	"Group_Heal_Distance" 		"50.0"
+		/ini ${gl_setini} "Distances" 	"Follow_Leash_Distance" 	"30.0"
+		/ini ${gl_setini} "Distances" 	"Follow_Distance" 			"10.0"
+		/ini ${gl_setini} "Distances" 	"Assist_Stick_Distance" 	"8.0"
+		/ini ${gl_setini} "Distances" 	"Speak_Distance" 			"5.0"
+	}
+
+	/varset gl_astpct ${Ini[${gl_setini},"Assists","Engage_Percent"]}
+	/varset gl_splset ${Ini[${gl_setini},"Spells","Spell_Set_Name"]}
+	/varset gl_comdis ${Ini[${gl_setini},"Distances","Communication_Distance"]}
+	/varset gl_rngdis ${Ini[${gl_setini},"Distances","Ranged_Attack_Distance"]}
+	/varset gl_spldis ${Ini[${gl_setini},"Distances","Spell_Casting_Distance"]}
+	/varset gl_ghldis ${Ini[${gl_setini},"Distances","Group_Heal_Distance"]}
+	/varset gl_lshdis ${Ini[${gl_setini},"Distances","Follow_Leash_Distance"]}
+	/varset gl_foldis ${Ini[${gl_setini},"Distances","Follow_Distance"]}
+	/varset gl_assdis ${Ini[${gl_setini},"Distances","Assist_Stick_Distance"]}
+	/varset gl_spkdis ${Ini[${gl_setini},"Distances","Speak_Distance"]}
 
 	/return
 }
@@ -81,8 +108,9 @@ sub Setup_Class() {
 	/declare gl_ismele		 	bool 	outer	false
 	/declare gl_iscstr			bool 	outer	false
 	/declare gl_istank			bool 	outer	false
-	/declare gl_isrngd 			bool 	outer 	false
+	/declare gl_usebow 			bool 	outer 	false
 	/declare gl_shdmed			bool 	outer	false
+
 
 	/if (${Me.Class.Name.Equal["Shadow Knight"]}) {
 
@@ -131,7 +159,7 @@ sub Init_Bard() {
 	/varset gl_ismele 		true
 	/varset gl_iscstr 		false
 	/varset gl_istank 		false
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		false
 
 	/return
@@ -172,7 +200,7 @@ sub Init_Beastlord() {
 	/varset gl_ismele 		true
 	/varset gl_iscstr 		true
 	/varset gl_istank 		false
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		true
 
 	/return
@@ -213,7 +241,7 @@ sub Init_Berserker() {
 	/varset gl_ismele 		true
 	/varset gl_iscstr 		false
 	/varset gl_istank 		false
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		false
 
 	/return
@@ -251,12 +279,12 @@ sub Init_Cleric() {
 	/varset gl_nmabls 		0
 	/varset gl_nmghlt 		2
 
-	/varset gl_ghlpct 		95
+	/varset gl_ghlpct 		80
 	/varset gl_helpct 		75
 	/varset gl_hotpct 		0
 
-	/varset gl_ghlgem 		3
-	/varset gl_helgem 		1
+	/varset gl_ghlgem 		1
+	/varset gl_helgem 		2
 	/varset gl_hotgem 		0
 	/varset gl_nukgem 		0
 	/varset gl_petgem 		0
@@ -264,7 +292,7 @@ sub Init_Cleric() {
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
 	/varset gl_istank		false
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -305,7 +333,7 @@ sub Init_Druid() {
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
 	/varset gl_istank		false
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -346,7 +374,7 @@ sub Init_Enchanter() {
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
 	/varset gl_istank		false
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -387,7 +415,7 @@ sub Init_Magician() {
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
 	/varset gl_istank		false
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -428,7 +456,7 @@ sub Init_Monk() {
 	/varset gl_ismele		true
 	/varset gl_iscstr		false
 	/varset gl_istank		false
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		false
 	
 	/return
@@ -478,7 +506,7 @@ sub Init_Necromancer() {
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
 	/varset gl_istank		false
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -519,7 +547,7 @@ sub Init_Paladin() {
 	/varset gl_ismele		true
 	/varset gl_iscstr		true
 	/varset gl_istank		true
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -560,7 +588,7 @@ sub Init_Ranger() {
 	/varset gl_ismele		true
 	/varset gl_iscstr		true
 	/varset gl_istank		false
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		false
 	
 	/return
@@ -572,7 +600,7 @@ sub Init_Rogue() {
 	/varset gl_tgtbfs[4,4] 	"0"
 	/varset gl_petbfs[4,4] 	"0"
 	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabl[6] 	"0"
+	/varset gl_cbtabl[1] 	"Backstab"
 
 	/varset gl_assdir		"behind"
 
@@ -601,7 +629,7 @@ sub Init_Rogue() {
 	/varset gl_ismele		true
 	/varset gl_iscstr		false
 	/varset gl_istank		false
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		false
 	
 	/return
@@ -642,7 +670,7 @@ sub Init_Shadow_Knight() {
 	/varset gl_ismele		true
 	/varset gl_iscstr		true
 	/varset gl_istank		true
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -666,7 +694,7 @@ sub Init_Shaman() {
 	/varset gl_qckbfs[3,4] "${Spell[${gl_qckbfs[3,1]}].ID}"
 
 	/varset gl_qckbfs[4,1] "Talisman of Celerity"
-	/varset gl_qckbfs[4,2] "Gorwynn"
+	/varset gl_qckbfs[4,2] "Khizzren"
 	/varset gl_qckbfs[4,3] "6"
 	/varset gl_qckbfs[4,4] "${Spell[${gl_qckbfs[4,1]}].ID}"
 
@@ -686,22 +714,22 @@ sub Init_Shaman() {
 	/varset gl_qckbfs[7,4] "${Spell[${gl_qckbfs[7,1]}].ID}"
 
 	/varset gl_qckbfs[8,1] "Spirit of the Leopard"
-	/varset gl_qckbfs[8,2] "Gorwynn"
+	/varset gl_qckbfs[8,2] "Khizzren"
 	/varset gl_qckbfs[8,3] "7"
 	/varset gl_qckbfs[8,4] "${Spell[${gl_qckbfs[8,1]}].ID}"
 
 	/varset gl_tgtbfs[1,1] "Spirit of Bih`li"
-	/varset gl_tgtbfs[1,2] "Hrelgar"
+	/varset gl_tgtbfs[1,2] ""
 	/varset gl_tgtbfs[1,3] "5"
 	/varset gl_tgtbfs[1,4] "${Spell[${gl_tgtbfs[1,1]}].ID}"
 
 	/varset gl_tgtbfs[2,1] "Focus of the Seventh"
-	/varset gl_tgtbfs[2,2] "Hrelgar"
+	/varset gl_tgtbfs[2,2] ""
 	/varset gl_tgtbfs[2,3] "4"
 	/varset gl_tgtbfs[2,4] "${Spell[${gl_tgtbfs[2,1]}].ID}"
 
 	/varset gl_tgtbfs[3,1] "Talisman of the Boar"
-	/varset gl_tgtbfs[3,2] "Hrelgar"
+	/varset gl_tgtbfs[3,2] ""
 	/varset gl_tgtbfs[3,3] "3"
 	/varset gl_tgtbfs[3,4] "${Spell[${gl_tgtbfs[3,1]}].ID}"
 
@@ -745,7 +773,7 @@ sub Init_Shaman() {
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
 	/varset gl_istank		false
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		true
 	
 	/return
@@ -788,7 +816,7 @@ sub Init_Warrior() {
 	/varset gl_ismele		true
 	/varset gl_iscstr		false
 	/varset gl_istank		true
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		false
 	
 	/return
@@ -829,7 +857,7 @@ sub Init_Wizard() {
 	/varset gl_ismele		false
 	/varset gl_iscstr		true
 	/varset gl_istank		false
-	/varset gl_isrngd 		false
+	/varset gl_usebow 		false
 	/varset gl_shdmed 		true
 	
 	/return

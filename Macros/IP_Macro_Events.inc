@@ -5,18 +5,18 @@ sub Check_Events() {
 	/doevents Accept_Raid
 	/doevents Assist
 	/doevents Buff
+	/doevents Character_Flag
 	/doevents Disband
 	/doevents End_Enrage
-	/doevents End_Follow
 	/doevents End_Macro
 	/doevents Follow
-	/doevents Character_Flag
 	/doevents Gate
 	/doevents Loot
 	/doevents Med
-	/doevents Start_Enrage
-	/doevents Take_Damage
 	/doevents Speak
+	/doevents Start_Enrage
+	/doevents Stop
+	/doevents Take_Damage
 	/doevents Warp
 
 	/return
@@ -52,9 +52,7 @@ sub Event_Assist(string line, string sender, int ID) {
 			/if (${Spawn[ID ${ID}].Type.NotEqual["NPC"]}) /return
 
 			/varset gl_asstid ${ID}
-			/varset gl_isastg true
-
-			/if (${gl_isfwlg}) /stick off
+			/varset gl_incmbt true
 		}
 	} 
 
@@ -74,8 +72,6 @@ sub Event_Buff(string line, string sender, int ID) {
 
 			/declare i int local
 
-			/if (${gl_isfwlg}) /afollow pause
-
 			/for i 1 to ${gl_nmtgbf}
 
 				:WaitMana
@@ -92,8 +88,6 @@ sub Event_Buff(string line, string sender, int ID) {
 			/next i
 
 			/bc Done buffing ${Spawn[ID ${ID}].Name}.
-
-			/if (${gl_isfwlg}) /afollow unpause
 		}
 	} 
 
@@ -126,20 +120,6 @@ sub Event_End_Enrage(string line) {
 	/return
 }
 
-#event End_Follow "<#1#> end follow"
-sub Event_End_Follow(string line, string sender) {
-	
-	/if (${Spawn[${sender}].ID}) {
-
-		/varset gl_isfwlg false
-		/varset gl_fwlgid 0
-	
-		/stick off
-	}
-
-	/return
-}
-
 #event End_Macro "#*# seconds to prepare your camp."
 sub Event_End_Macro(string line) {
 
@@ -151,16 +131,22 @@ sub Event_End_Macro(string line) {
 #event Follow "#*# follow #1#"
 sub Event_Follow(string line, int ID) {
 
-	/if (${Me.ID} == ${ID}) /return 
+	/if (${Me.ID} == ${ID}) {
+
+		/return 
+	}
 
 	/if (${Spawn[ID ${ID}].ID} && ${Spawn[ID ${ID}].Distance} < ${gl_comdis}) {
-
+	
 		/interrupt
 
 		/varset gl_isfwlg true
 		/varset gl_fwlgid ${ID}
 
-		/stick ID ${gl_fwlgid} ${gl_foldis}
+		/varset gl_incmbt false
+		/varset gl_asstid 0
+
+		/attack off
 	}
 
 	/return
@@ -267,6 +253,17 @@ sub Event_Start_Enrage(string line) {
 	/return
 } 
 
+#event Stop "<#*#> stop"
+sub Event_Stop(string line) {
+	
+	/varset gl_isfwlg false
+	/varset gl_fwlgid 0
+			
+	/stick off
+	
+	/return 
+}
+
 #event Take_Damage "#1# YOU for #*# points of damage."
 sub Event_Take_Damage(string line) {
 
@@ -278,7 +275,7 @@ sub Event_Take_Damage(string line) {
 			/delay 5
 			/stand
 
-			/if (${Target.ID} && ${gl_isastg}) /attack on
+			/if (${Target.ID} && ${gl_incmbt}) /attack on
 		}
 	}
 

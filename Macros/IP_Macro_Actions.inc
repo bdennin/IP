@@ -1,10 +1,11 @@
 
 sub Check_Actions() {
 
-	/call "Check_Follow"
 	/call "Check_Med"
-	/call "Check_Zone"
+	/call "Check_Follow"
 	/call "Check_Combat"
+	/call "Check_Attack"
+	/call "Check_Zone"
 
 	/if (${gl_zontmr}) {
 		/return
@@ -22,61 +23,146 @@ sub Check_Actions() {
 	/call "Check_HoTs"
 	/if (${Macro.Return}) /return
 
-	/if	(${Bool[${gl_petspl}]}) {
-		
-		/call "Check_Pet_Summon"
-		/if (${Macro.Return}) /return
+	/call "Check_Cannibalize"
+	/if (${Macro.Return}) /return
 
-		/call "Check_Pet_Buffs"
-		/if (${Macro.Return}) /return
-	}	
+	/call "Check_Pet_Summon"
+	/if (${Macro.Return}) /return
 
-|	/call "Check_Assists"
+	/call "Check_Pet_Buffs"
+	/if (${Macro.Return}) /return
 
-	/if (${gl_isastg} && ${Spawn[ID ${gl_asstid}].ID}) {
-
-		/if (${Bool[${gl_petspl}]}) {
-
-			/call "Check_Pet_Assists"
-		}
-		
-		/call "Check_Attack"
-
-		/call "Check_Abilities"
-		
-		/call "Check_Cannibalize"
-		/if (${Macro.Return}) /return
+	/call "Check_Debuffs"
+	/if (${Macro.Return}) /return
 	
-		/call "Check_Debuffs"
-		/if (${Macro.Return}) /return
-		
-		/call "Check_Nukes"
-		/if (${Macro.Return}) /return
-	}
+	/call "Check_Nukes"
+	/if (${Macro.Return}) /return
 	
 	/return
 }
 
-sub Check_Follow() {
+sub Check_Attack() {
 	
-	/if (${gl_isfwlg}) {
+	/if (${gl_incmbt}) {
 
-		/if (!${gl_isastg}) {
+		/if (!${gl_asstid}) /return
 
-			/if (${SpawnCount[ID ${gl_fwlgid}]} > 0) {
+		/if (${Me.Pet.ID}) {
 			
-				/if (${Spawn[ID ${gl_fwlgid}].Distance} > ${gl_lshdis}) {
+			/if (${gl_pettid} != ${gl_asstid}) {
+			
+				/if (${Me.Pet.Distance} < ${gl_lshdis}) {
 
-					/stick ID ${gl_fwlgid} ${gl_foldis}
+					/varset gl_pettid ${gl_asstid}
+					/tar ID ${gl_pettid}
+					/delay 1
+
+					/pet attack
 				}
+			}
+		}
+
+		/if (${gl_ismele}) {
+
+			/tar ID ${gl_asstid}
+			/delay 1
+
+			/if (!${Target.ID} || ${Target.Type.Equal["Corpse"]}) {
+
+				/varset gl_incmbt false
+				/varset gl_asstid 0
+
+				/keypress esc
+
+				/return
+			}
+
+			/if (${gl_usebow}) {
+			
+				/stick moveback ID ${gl_asstid} ${gl_rngdis}
+			
+				/if (${Me.RangedReady})	/ranged
 			
 			} else {
+
+				/declare abl 	string	local 
+				/declare i 		int 	local
+
+				/stick moveback ID ${gl_asstid} ${gl_assdis} ${gl_assdir}
+				/attack on
+
+				/for i 1 to ${gl_nmabls}
+
+					/varset abl ${gl_cbtabl[${i}]}
+
+					/if (${Me.AbilityReady[${abl}]}) /doability ${abl}
+
+				/next i
+			}
+		}
+	}
+
+	/return 
+}
+
+sub Check_Combat() {
+
+	/declare cncbts 	string 	local 	${NetBots.Client}
+	/declare netbot 	string 	local 	"0"
+	/declare i 			int 	local
+
+	/for i 1 to ${NetBots.Counts} 
+		
+		/varset netbot ${cncbts.Arg[${i}]}
+
+		/if (${Spawn[PC ${netbot}].ID} && ${Spawn[PC ${netbot}].Distance} < ${gl_comdis}) {
+
+			/if (${NetBots[${netbot}].CombatState} == 0) {
+
+				/varset gl_incmbt true
+
+				/return
+			} 
+		}
+
+	/next i
+
+	/varset gl_incmbt false
+
+	/return 
+}
+
+sub Check_Follow() {
+	
+	/if (${gl_isfwlg} && !${gl_incmbt}) {
+
+		/if (${Spawn[ID ${gl_fwlgid}].ID}) {
+
+			/if (${Spawn[ID ${gl_fwlgid}].Distance} > ${gl_comdis}) {
+				
+				/bc I'm too far away to follow.
 
 				/varset gl_isfwlg false
 				/varset gl_fwlgid 0
 
 				/stick off
+			
+			} else {
+	
+				/if (${gl_isfwlg} && ${Spawn[ID ${gl_fwlgid}].Distance} > ${gl_foldis} + 5.0) {
+
+					/stick ID ${gl_fwlgid} ${gl_foldis}
+				}
 			}
+
+		} else {
+
+			/bc My follow target has zoned.
+
+			/varset gl_isfwlg false
+			/varset gl_fwlgid 0
+
+			/stick off
 		}
 	}
 
@@ -94,12 +180,7 @@ sub Check_Med() {
 			/return
 		}
 
-		/if (!${Me.Sitting} && ${Bool[${Cast.Ready}]} && !${Me.Moving}) /sit
-
-		/if (${gl_isfwlg} && ${Spawn[ID ${gl_fwlgid}].Distance} > ${gl_foldis}) {
-
-			/stick ID ${gl_fwlgid} ${gl_foldis}
-		}
+		/if (!${Me.Sitting}) /sit
 	}
 
 	/return
@@ -112,46 +193,15 @@ sub Check_Zone() {
 		/varset gl_zontmr 0s
 		/varset gl_curzon ${Zone.Name}
 
-		/if (${gl_iscstr}) /loadspells ${gl_splset}
+		/if (${gl_iscstr}) {
+
+			/loadspells ${gl_splset}
+
+			/delay 3s
+		}
 	}
 
 	/return
-}
-
-sub Check_Combat() {
-
-	/declare cncbts 	string 	local 	${NetBots.Client}
-	/declare netbot 	string 	local 	"0"
-	/declare i 			int 	local
-
-	/if (${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
-
-		/varset gl_isastg false
-		/varset gl_asstid 0
-		/attack off
-
-		/keypress esc
-	}
-
-	/for i 1 to ${NetBots.Counts} 
-		
-		/varset netbot ${cncbts.Arg[${i}]}
-
-		/if (${NetBots[${netbot}].CombatState} == 0) {
-
-			/varset gl_isastg true
-
-			/return
-		} 
-		
-	/next i
-
-	/if (${gl_isfwlg} && ${gl_ismele} && ${Spawn[ID ${gl_fwlgid}].Distance} > ${gl_foldis}) {
-
-		/stick ID ${gl_fwlgid} ${gl_foldis}
-	}
-
-	/return 
 }
 
 sub Check_Group_Heals() {
@@ -171,15 +221,18 @@ sub Check_Group_Heals() {
 
 			/if (${Spawn[PC ${netbot}].ID} && ${Spawn[PC ${netbot}].Distance} < ${gl_ghldis}) {
 
-				/if (${NetBots[${netbot}].PctHPs} < ${gl_ghlpct}) {
+				/if (${NetBots[${netbot}].InGroup}) {
+					
+					/if (${NetBots[${netbot}].PctHPs} < ${gl_ghlpct}) {
 
-					/varcalc helcnt ${helcnt} + 1
+						/varcalc helcnt ${helcnt} + 1
+					}
 				}
 			}
 
 		/next i
 
-		/if (${helcnt} > ${gl_nmghlt}) {
+		/if (${helcnt} >= ${gl_nmghlt}) {
 
 			/call Cast ${gl_ghlspl} ${gl_ghlgem} ${Me.ID}
 
@@ -286,7 +339,7 @@ sub Check_Quick_Buffs() {
 			/varset buftgt ${gl_qckbfs[${i},2]}
 			/varset bufgem ${gl_qckbfs[${i},3]}
 			/varset buffid ${gl_qckbfs[${i},4]}
-	
+
 			/if (${Me.CurrentMana} < ${Spell[${bufspl}].Mana} + 100) /return 0
 
 			/if (${Spawn[PC ${buftgt}].ID} && ${Spawn[PC ${buftgt}].Distance} < ${gl_spldis}) {
@@ -307,12 +360,15 @@ sub Check_Quick_Buffs() {
 
 sub Check_Pet_Summon() {
 
-	/if (!${Me.Pet.ID}) {
+	/if	(${Bool[${gl_petspl}]}) {
+		
+		/if (!${Me.Pet.ID}) {
 
-		/if (${Me.CurrentMana} < ${Spell[${gl_petspl}].Mana} + 100) /return 0
+			/if (${Me.CurrentMana} < ${Spell[${gl_petspl}].Mana} + 100) /return 0
 
-		/call Cast ${gl_petspl} ${gl_petgem} ${Me.ID}
-		/return 1
+			/call Cast ${gl_petspl} ${gl_petgem} ${Me.ID}
+			/return 1
+		}
 	}
 
 	/return 0
@@ -353,64 +409,6 @@ sub Check_Pet_Buffs() {
 	/return 0
 }
 
-sub Check_Pet_Assists() {
-
-	/if (${Me.Pet.Distance} > ${gl_lshdis}) /return
-
-	/if (${gl_pettid} != ${gl_asstid}) {
-		
-		/varset gl_pettid ${gl_asstid}
-		/tar ID ${gl_pettid}
-		/delay 1
-
-		/pet attack
-	}
-
-	/return 
-}
-
-sub Check_Attack() {
-
-	/if (${gl_ismele}) {
-
-		/tar ID ${gl_asstid}
-		/delay 1
-
-		/stick moveback ID ${gl_asstid} ${gl_assdis} ${gl_assdir}
-		/attack on
-
-	} else /if (${gl_isrngd}) {
-
-		/tar ID ${gl_asstid}
-		/delay 1
-
-		/stick moveback ID ${gl_asstid} ${gl_rngdis}
-		
-		/if (${Me.RangedReady})	/ranged
-	}
-
-	/return
-}
-
-sub Check_Abilities() {
-	
-	/if (${gl_ismele} && ${Target.ID}) {
-
-		/declare abl 	string	local 
-		/declare i 		int 	local
-
-		/for i 1 to ${gl_nmabls}
-
-			/varset abl ${gl_cbtabl[${i}]}
-
-			/if (${Me.AbilityReady[${abl}]}) /doability ${abl}
-
-		/next i
-	}
-
-	/return
-}
-
 sub Check_Debuffs() {
 	
 	/return 0
@@ -418,45 +416,51 @@ sub Check_Debuffs() {
 
 sub Check_Cannibalize() {
 
-	/if (${gl_iscstr}) {
+	/if (${gl_incmbt}) {
 
-		/if (${Me.PctMana} < 90 && ${Me.PctHPs} > 75) {
-			
-			/if (${Me.PctMana} < 60 && ${Me.AltAbilityReady["Cannibalization"]}) {
+		/if (${gl_iscstr}) {
 
-				/aa act cannibalization
+			/if (${Me.PctMana} < 90 && ${Me.PctHPs} > 75) {
+				
+				/if (${Me.PctMana} < 60 && ${Me.AltAbilityReady["Cannibalization"]}) {
 
-				/delay 3s
+					/aa act cannibalization
 
-				/return 1
+					/delay 3s
 
-			} else /if (${Me.SpellReady["Ancient: Chaotic Pain"]}) {
+					/return 1
 
-				/call Cast "Ancient: Chaotic Pain" 9 ${Me.ID}
+				} else /if (${Me.SpellReady["Ancient: Chaotic Pain"]}) {
 
-				/return 1
+					/call Cast "Ancient: Chaotic Pain" 9 ${Me.ID}
 
-			} else /if (${FindItem["Manastone"].InvSlot}) {
+					/return 1
 
-				/itemnotify ${FindItem["Manastone"].InvSlot} rightmouseup
+				} else /if (${FindItem["Manastone"].InvSlot}) {
+
+					/itemnotify ${FindItem["Manastone"].InvSlot} rightmouseup
+				}
 			}
 		}
 	}
-	
+		
 	/return 0
 }
 
 sub Check_Nukes() {
 	
 	/if (!${gl_dmgtmr} && ${Bool[${gl_nukspl}]}) {
+
+		/if (${gl_incmbt}) {
 			
-		/if (${Me.CurrentMana} < ${Spell[${gl_nukspl}].Mana}) /return 0
+			/if (${Me.CurrentMana} < ${Spell[${gl_nukspl}].Mana}) /return 0
 
-		/if (${Me.SpellReady[${gl_nukspl}]}) {
+			/if (${Me.SpellReady[${gl_nukspl}]}) {
 
-			/call Cast ${gl_nukspl} ${gl_nukgem} ${gl_asstid}
+				/call Cast ${gl_nukspl} ${gl_nukgem} ${gl_asstid}
 
-			/return 1
+				/return 1
+			}
 		}
 	}
 
