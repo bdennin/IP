@@ -93,7 +93,7 @@ sub Check_Attack() {
 
 				/for i 1 to ${gl_nmabls}
 
-					/varset abl ${gl_cbtabl[${i}]}
+					/varset abl ${gl_cbtabs[${i}]}
 
 					/if (${Me.AbilityReady[${abl}]}) /doability ${abl}
 
