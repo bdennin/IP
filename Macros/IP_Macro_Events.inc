@@ -62,7 +62,7 @@ sub Event_Assist(string line, string sender, int ID) {
 #event Buff "<#1#> buffs on #2#"
 sub Event_Buff(string line, string sender, int ID) {
 	
-	/if (${gl_nmtgbf} == 0) /return
+	/if (${gl_nmcmbf} == 0) /return
 
 	/if (${Spawn[PC ${sender}].ID} && ${Spawn[${sender}].Distance} < ${gl_comdis}) {
 
@@ -72,18 +72,18 @@ sub Event_Buff(string line, string sender, int ID) {
 
 			/declare i int local
 
-			/for i 1 to ${gl_nmtgbf}
+			/for i 1 to ${gl_nmcmbf}
 
 				:WaitMana
 
-				/if (${Me.CurrentMana} < ${Spell[${gl_tgtbfs[${i},1]}].Mana} + 300) {
+				/if (${Me.CurrentMana} < ${Spell[${gl_cmdbfs[${i},1]}].Mana} + 300) {
 
 					/if (!${Me.Sitting}) /sit
 					/delay 6s
 					/goto :WaitMana
 				}
 
-				/call Cast ${gl_tgtbfs[${i},1]} ${gl_tgtbfs[${i},3]} ${ID}
+				/call Cast ${gl_cmdbfs[${i},1]} ${gl_cmdbfs[${i},2]} ${ID}
 
 			/next i
 

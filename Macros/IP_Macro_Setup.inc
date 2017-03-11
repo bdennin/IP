@@ -6,6 +6,8 @@ sub Setup() {
 	
 	/call "Check_Plugins"
 
+	/if (${Me.Class.Name.Equal["Bard"]}) /squelch /twist 1 2 3 4
+
 	/squelch /tgb on
 	/squelch /hidecorpse looted
 
@@ -18,32 +20,36 @@ sub Setup() {
 
 sub Setup_Global() {
 
+	||Internal variables
 	/declare gl_setini 	string 	outer 	"Settings\Settings.ini"
-	/declare gl_botini 	string 	outer 	"Bots\${MacroQuest.Server}_${Me.Class}_${Me.Name}.ini"	
-	/declare gl_splset	string	outer   "0"
+	/declare gl_botini 	string 	outer 	"Bots\${MacroQuest.Server}_${Me.Name}.ini"	
 	/declare gl_curzon	string 	outer 	"0"
 
 	/declare gl_dmgtmr	timer  	outer	0s
 	/declare gl_zontmr 	timer 	outer 	0s
 		
-	/declare gl_engpct 	int 	outer 	0
 	/declare gl_fwlgid	int 	outer	0
 	/declare gl_asstid	int 	outer	0
 	/declare gl_pettid 	int 	outer 	0	
-
-	/declare gl_comdis	float 	outer 	0.0
-	/declare gl_rngdis 	float 	outer 	0.0
-	/declare gl_spldis	float	outer	0.0
-	/declare gl_ghldis 	float 	outer	0.0
-	/declare gl_lshdis 	float 	outer	0.0
-	/declare gl_foldis	float 	outer	0.0
-	/declare gl_assdis	float 	outer	0.0
-	/declare gl_spkdis 	float 	outer	0.0
 
 	/declare gl_incmbt	bool 	outer	false
 	/declare gl_isatkg 	bool 	outer 	false
 	/declare gl_isfwlg	bool 	outer	false
 	/declare gl_ismedg	bool 	outer	false
+
+	||Ini globals
+	/declare gl_engpct 	int 	outer
+
+	/declare gl_splset	string	outer
+	
+	/declare gl_comdis	float 	outer
+	/declare gl_rngdis 	float 	outer
+	/declare gl_spldis	float	outer
+	/declare gl_ghldis 	float 	outer
+	/declare gl_lshdis 	float 	outer
+	/declare gl_foldis	float 	outer
+	/declare gl_assdis	float 	outer
+	/declare gl_spkdis 	float 	outer
 
 	/if (!${Ini[${gl_setini}].Length}) {
 
@@ -78,837 +84,160 @@ sub Setup_Global() {
 }
 
 sub Setup_Class() {
-
-	/declare gl_qckbfs[8,4] string	outer 	"0"
-	/declare gl_tgtbfs[4,4] string	outer 	"0"
-	/declare gl_petbfs[4,4] string 	outer 	"0"
-	/declare gl_debufs[4,4] string 	outer 	"0"
-
-	/declare gl_cbtabs[6] 	string	outer 	"0"
-
-	/declare gl_nmqkbf		int 	outer 	0
-	/declare gl_nmtgbf 		int 	outer 	0
-	/declare gl_nmptbf 		int 	outer 	0
-	/declare gl_nmdebf 		int 	outer 	0
-	/declare gl_nmabls		int 	outer 	0
-	/declare gl_nmghtg 		int 	outer 	0
-
-	/declare gl_assdir		string 	outer	"0"
 	
-	/declare gl_ghlspl 		string 	outer 	"0"
-	/declare gl_thlspl		string 	outer 	"0"
-	/declare gl_hotspl 		string 	outer 	"0"
-	/declare gl_nukspl 		string 	outer 	"0"
-	/declare gl_petspl 		string 	outer 	"0"
+	/declare gl_assdir		string 	outer
+	/declare gl_ismele		bool 	outer
+	/declare gl_iscstr		bool 	outer
+	/declare gl_istank		bool 	outer
+	/declare gl_shdsht 		bool 	outer
+	/declare gl_shdmed		bool 	outer
 	
-	/declare gl_ghlpct 		int 	outer 	0
-	/declare gl_helpct		int 	outer 	0
-	/declare gl_hotpct 		int 	outer 	0
+	/declare gl_cbtabs[6] 	string	outer
+	/declare gl_nmabls		int 	outer
+	
+	/declare gl_ghlspl 		string 	outer
+	/declare gl_ghlgem 		string 	outer
+	/declare gl_ghlpct 		int 	outer
+	/declare gl_nmghtg 		int 	outer
 
-	/declare gl_ghlgem 		int 	outer	0
-	/declare gl_helgem 		int 	outer 	0
-	/declare gl_hotgem 		int 	outer 	0
-	/declare gl_nukgem 		int 	outer 	0
-	/declare gl_petgem 		int 	outer 	0
+	/declare gl_thlspl		string 	outer
+	/declare gl_thlgem 		string 	outer
+	/declare gl_thlpct		int 	outer 	
 
-	/declare gl_ismele		bool 	outer	false
-	/declare gl_iscstr		bool 	outer	false
-	/declare gl_istank		bool 	outer	false
-	/declare gl_usebow 		bool 	outer 	false
-	/declare gl_shdmed		bool 	outer	false
+	/declare gl_hotspl 		string 	outer 	
+	/declare gl_hotgem 		string 	outer
+	/declare gl_hotpct 		int 	outer
+	
+	/declare gl_nukspl 		string 	outer
+	/declare gl_nukgem 		string 	outer
+
+	/declare gl_petspl 		string 	outer
+	/declare gl_petgem 		string 	outer
+
+	/declare gl_debufs[4,3] string 	outer
+	/declare gl_nmdebf 		int 	outer
+
+	/declare gl_cstbfs[8,3] string	outer
+	/declare gl_nmcsbf		int 	outer
+
+	/declare gl_cmdbfs[4,3] string	outer
+	/declare gl_nmcmbf 		int 	outer
+	
+	/declare gl_petbfs[4,3] string 	outer
+	/declare gl_nmptbf 		int 	outer
 	
 	/if (!${Ini[${gl_botini}].Length}) {
-
-		/declare i int local
 		
-		/ini ${gl_botini} "Constants" 		"Should_Melee"				"0"
-		/ini ${gl_botini} "Constants" 		"Should_Cast"		 		"0"
-		/ini ${gl_botini} "Constants" 		"Should_Tank"				"0"
-		/ini ${gl_botini} "Constants" 		"Should_Use_Bow" 			"0"
-		/ini ${gl_botini} "Constants" 		"Should_Meditate" 			"0"
+		/if (${Me.Class.Name.Equal["Shadow Knight"]}) {
+
+			/call Init_Shadow_Knight
 		
-		/ini ${gl_botini} "Quick_Buffs" 	"Quick_Buff_1_Spell" 		"0"
-		/ini ${gl_botini} "Quick_Buffs" 	"Quick_Buff_1_Gem" 			"0"
-		/ini ${gl_botini} "Quick_Buffs" 	"Quick_Buff_1_Target"		"0"
+		} else {
 
-		/ini ${gl_botini} "Target_Buffs" 	"Target_Buff_1_Spell" 		"0"
-		/ini ${gl_botini} "Target_Buffs" 	"Target_Buff_1_Gem" 		"0"
-
-		/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_1_Spell" 			"0"
-		/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_1_Gem" 			"0"
-
-		/ini ${gl_botini} "Debuffs" 		"Debuff_1_Spell" 			"0"
-		/ini ${gl_botini} "Debuffs" 		"Debuff_1_Gem" 				"0"
-
-		/ini ${gl_botini} "Abilities" 		"Ability_1" 				"0"
-
-		/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			"0"
-		/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			"0"
-		/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		"0"
-
-		/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		"0"
-		/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			"0"
-		/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Percent"		"0"
-
-		/ini ${gl_botini} "Heal_Over_Time" 	"Heal_Over_Time_Spell" 		"0"
-		/ini ${gl_botini} "Heal_Over_Time" 	"Heal_Over_Time_Gem" 		"0"
-		/ini ${gl_botini} "Heal_Over_Time" 	"Heal_Over_Time_Percent"	"0"
-
-		/ini ${gl_botini} "Nuke" 			"Nuke_Spell" 				"0"
-		/ini ${gl_botini} "Nuke"		 	"Nuke_Gem" 					"0"
-
-		/ini ${gl_botini} "Pet" 			"Pet_Spell" 				"0"
-		/ini ${gl_botini} "Pet"		 		"Pet_Gem" 					"0"
+			/call Init_${Me.Class.Name}
+		}
 	}
 
-	/if (${Me.Class.Name.Equal["Shadow Knight"]}) {
+	/declare iter 			string 	local
+	/declare i 				int 	local
 
-		/call "Init_Shadow_Knight"
+	/varset gl_assdir ${Ini[${gl_botini},"Control","Assist_Direction"]}
+	/varset gl_ismele ${Ini[${gl_botini},"Control","Should_Melee"]}
+	/varset gl_iscstr ${Ini[${gl_botini},"Control","Should_Cast"]}
+	/varset gl_istank ${Ini[${gl_botini},"Control","Should_Tank"]}
+	/varset gl_shdsht ${Ini[${gl_botini},"Control","Should_Shoot"]}
+	/varset gl_shdmed ${Ini[${gl_botini},"Control","Should_Meditate"]}
 
-	} else {
-
-		/call "Init_${Me.Class.Name}"
-	}
-
-	/return
-}
-
-sub Init_Bard() {
+	/for i 1 to 6
 		
-	/varset gl_qckbfs[4,4] 	"0"
-	/varset gl_tgtbfs[4,4] 	"0"
-	/varset gl_petbfs[4,4] 	"0"
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[6] 	"0"
-
-	/varset gl_assdir		"behind"
-
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
-
-	/varset gl_nmqkbf 		0
-	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		0
-	/varset gl_nmghtg 		0
-
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		0
-
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		0
-
-	/varset gl_ismele 		true
-	/varset gl_iscstr 		true
-	/varset gl_istank 		false
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		false
-
-	/return
-}
-
-sub Init_Beastlord() {
+		/varset iter "${Ini[${gl_botini},"Abilities","Ability#${i}"]}"
 		
-	/varset gl_qckbfs[4,4] 	"0"
-	/varset gl_tgtbfs[4,4] 	"0"
-	/varset gl_petbfs[4,4] 	"0"
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[6] 	"0"
+		/if (${Bool[${iter}]}) {
 
-	/varset gl_assdir		"behind"
+			/varset gl_cbtabs[${i}] ${iter}
 
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
+			/varset gl_nmabls ${i}
+		}
 
-	/varset gl_nmqkbf 		0
-	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		0
-	/varset gl_nmghtg 		0
+	/next i
+
+	/varset gl_ghlspl "${Ini[${gl_botini},"Group_Heal","Group_Heal_Spell"]}"
+	/varset gl_ghlgem "${Ini[${gl_botini},"Group_Heal","Group_Heal_Gem"]}"
+	/varset gl_ghlpct ${Ini[${gl_botini},"Group_Heal","Group_Heal_Percent"]}
+	/varset gl_nmghtg ${Ini[${gl_botini},"Group_Heal","Group_Heal_Targets"]}
+
+	/varset gl_thlspl "${Ini[${gl_botini},"Target_Heal","Target_Heal_Spell"]}"
+	/varset gl_thlgem "${Ini[${gl_botini},"Target_Heal","Target_Heal_Gem"]}"
+	/varset gl_thlpct ${Ini[${gl_botini},"Target_Heal","Target_Heal_Percent"]}
+
+	/varset gl_hotspl "${Ini[${gl_botini},"Heal_Over_Time","Heal_Over_Time_Spell"]}"
+	/varset gl_hotgem "${Ini[${gl_botini},"Heal_Over_Time","Heal_Over_Time_Gem"]}"
+	/varset gl_hotpct ${Ini[${gl_botini},"Heal_Over_Time","Heal_Over_Time_Percent"]}
 	
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		0
+	/varset gl_nukspl "${Ini[${gl_botini},"Nuke","Nuke_Spell"]}"
+	/varset gl_nukgem "${Ini[${gl_botini},"Nuke","Nuke_Gem"]}"
 
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		0
+	/varset gl_petspl "${Ini[${gl_botini},"Pet","Pet_Spell"]}"
+	/varset gl_petgem "${Ini[${gl_botini},"Pet","Pet_Gem"]}"
 
-	/varset gl_ismele 		true
-	/varset gl_iscstr 		true
-	/varset gl_istank 		false
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		true
+	/for i 1 to 4
+		
+		/varset iter ${Ini[${gl_botini},"Debuffs","Debuff_Spell#${i}"]}
+		
+		/if (${Bool[${iter}]}) {
 
-	/return
-}
-
-sub Init_Berserker() {
-
-	/varset gl_qckbfs[4,4] 	"0"
-	/varset gl_tgtbfs[4,4] 	"0"
-	/varset gl_petbfs[4,4] 	"0"
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[6] 	"0"
-
-	/varset gl_assdir		"behind"
-
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
-
-	/varset gl_nmqkbf 		0
-	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		0
-	/varset gl_nmghtg 		0
+			/varset gl_debufs[${i},1] "${Ini[${gl_botini},"Debuffs","Debuff_Spell#${i}"]}"
+			/varset gl_debufs[${i},2] "${Ini[${gl_botini},"Debuffs","Debuff_Gem#${i}"]}"
 	
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		0
+			/varset gl_nmdebf ${i}
+		}
 
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		0
+	/next i
 
-	/varset gl_ismele 		true
-	/varset gl_iscstr 		false
-	/varset gl_istank 		false
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		false
-
-	/return
-}
-
-sub Init_Cleric() {
-
-	/varset gl_qckbfs[4,4] 	"0"
-
-	/varset gl_tgtbfs[1,1] 	"Hand of Virtue"
-	/varset gl_tgtbfs[1,2] 	"Hrelgar"
-	/varset gl_tgtbfs[1,3] 	"4"
-	/varset gl_tgtbfs[1,4] 	"${Spell[${gl_tgtbfs[1,1]}].ID}"
-
-	/varset gl_tgtbfs[2,1] 	"Aura of Reverence"
-	/varset gl_tgtbfs[2,2] 	"Hrelgar"
-	/varset gl_tgtbfs[2,3] 	"5"
-	/varset gl_tgtbfs[2,4] 	"${Spell[${gl_tgtbfs[2,1]}].ID}"
-
-	/varset gl_petbfs[4,4] 	"0"
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[6] 	"0"
-
-	/varset gl_assdir		"behind"
-
-	/varset gl_ghlspl 		"Word of Vigor"
-	/varset gl_thlspl		"Complete Heal"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
-
-	/varset gl_nmqkbf 		0
-	/varset gl_nmtgbf 		2
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		0
-	/varset gl_nmghtg 		3
-
-	/varset gl_ghlpct 		80
-	/varset gl_helpct 		70
-	/varset gl_hotpct 		0
-
-	/varset gl_ghlgem 		3
-	/varset gl_helgem 		2
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		0
-
-	/varset gl_ismele		false
-	/varset gl_iscstr		true
-	/varset gl_istank		false
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		true
+	/for i 1 to 8
+		
+		/varset iter ${Ini[${gl_botini},"Constant_Buffs","Constant_Buff_Spell#${i}"]}
 	
-	/return
-}
+		/if (${Bool[${iter}]}) {
 
-sub Init_Druid() {
+			/varset gl_cstbfs[${i},1] "${Ini[${gl_botini},"Constant_Buffs","Constant_Buff_Spell#${i}"]}"
+			/varset gl_cstbfs[${i},2] "${Ini[${gl_botini},"Constant_Buffs","Constant_Buff_Gem#${i}"]}"
+			/varset gl_cstbfs[${i},3] ${Ini[${gl_botini},"Constant_Buffs","Constant_Buff_Target#${i}"]}
 
-	/varset gl_qckbfs[4,4] 	"0"
-	/varset gl_tgtbfs[4,4] 	"0"
-	/varset gl_petbfs[4,4] 	"0"
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[6] 	"0"
+			/varset gl_nmcsbf ${i}
+		}
 
-	/varset gl_assdir		"behind"
+	/next i
 
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
+	/for i 1 to 4
+		
+		/varset iter ${Ini[${gl_botini},"Command_Buffs","Command_Buff_Spell#${i}"]}
+		
+		/if (${Bool[${iter}]}) {
 
-	/varset gl_nmqkbf 		0
-	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		0
-	/varset gl_nmghtg 		0
-	
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		0
+			/varset gl_cmdbfs[${i},1] "${Ini[${gl_botini},"Command_Buffs","Command_Buff_Spell#${i}"]}"
+			/varset gl_cmdbfs[${i},2] "${Ini[${gl_botini},"Command_Buffs","Command_Buff_Gem#${i}"]}"
 
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		0
+			/varset gl_nmcmbf ${i}
+		}
 
-	/varset gl_ismele		false
-	/varset gl_iscstr		true
-	/varset gl_istank		false
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		true
-	
-	/return
-}
+	/next i
 
-sub Init_Enchanter() {
+	/for i 1 to 4
+		
+		/varset iter ${Ini[${gl_botini},"Pet_Buffs","Pet_Buff_Spell#${i}"]}
+		
+		/if (${Bool[${iter}]}) {
 
-	/varset gl_qckbfs[4,4] 	"0"
-	/varset gl_tgtbfs[4,4] 	"0"
-	/varset gl_petbfs[4,4] 	"0"
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[6] 	"0"
+			/varset gl_petbfs[${i},1] "${Ini[${gl_botini},"Pet_Buffs","Pet_Buff_Spell#${i}"]}"
+			/varset gl_petbfs[${i},2] "${Ini[${gl_botini},"Pet_Buffs","Pet_Buff_Gem#${i}"]}"
+			/varset gl_petbfs[${i},3] ${Ini[${gl_botini},"Pet_Buffs","Pet_Buff_Owner#${i}"]}
 
-	/varset gl_assdir		"behind"
+			/varset gl_nmptbf ${i}
+		}
 
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
+	/next i
 
-	/varset gl_nmqkbf 		0
-	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		0
-	/varset gl_nmghtg 		0
-	
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		0
-
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		0
-
-	/varset gl_ismele		false
-	/varset gl_iscstr		true
-	/varset gl_istank		false
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		true
-	
-	/return
-}
-
-sub Init_Magician() {
-
-	/varset gl_qckbfs[4,4] 	"0"
-	/varset gl_tgtbfs[4,4] 	"0"
-	/varset gl_petbfs[4,4] 	"0"
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[6] 	"0"
-
-	/varset gl_assdir		"behind"
-
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
-
-	/varset gl_nmqkbf 		0
-	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		0
-	/varset gl_nmghtg 		0
-	
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		0
-
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		0
-
-	/varset gl_ismele		false
-	/varset gl_iscstr		true
-	/varset gl_istank		false
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		true
-	
-	/return
-}
-
-sub Init_Monk() {
-	
-	/varset gl_qckbfs[4,4] 	"0"
-	/varset gl_tgtbfs[4,4] 	"0"
-	/varset gl_petbfs[4,4] 	"0"
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[1] 	"Flying Kick"
-
-	/varset gl_assdir		"behind"
-
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
-
-	/varset gl_nmqkbf 		0
-	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		1
-	/varset gl_nmghtg 		0
-	
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		0
-
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		0
-
-	/varset gl_ismele		true
-	/varset gl_iscstr		false
-	/varset gl_istank		false
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		false
-	
-	/return
-}
-
-sub Init_Necromancer() {
-
-	/varset gl_qckbfs[1,1] "Ancient: Seduction of Chaos"
-	/varset gl_qckbfs[1,2] "Phylum"
-	/varset gl_qckbfs[1,3] "6"
-	/varset gl_qckbfs[1,4] "${Spell[${gl_qckbfs[1,1]}].ID}"
-
-	/varset gl_tgtbfs[4,4] 	"0"
-
-	/varset gl_petbfs[1,1] "Rune of Death"
-	/varset gl_petbfs[1,2] "Phylum"
-	/varset gl_petbfs[1,3] "5"
-	/varset gl_petbfs[1,4] "${Spell[${gl_petbfs[1,1]}].ID}"
-
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[6] 	"0"
-
-	/varset gl_assdir		"behind"
-
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		""
-	/varset gl_petspl 		"Child of Bertoxxulous"
-
-	/varset gl_nmqkbf 		1
-	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		1
-	/varset gl_nmabls 		0
-	/varset gl_nmghtg 		0
-	
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		0
-
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		7
-
-	/varset gl_ismele		false
-	/varset gl_iscstr		true
-	/varset gl_istank		false
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		true
-	
-	/return
-}
-
-sub Init_Paladin() {
-
-	/varset gl_qckbfs[4,4] 	"0"
-	/varset gl_tgtbfs[4,4] 	"0"
-	/varset gl_petbfs[4,4] 	"0"
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[6] 	"0"
-
-	/varset gl_assdir		"front"
-
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
-
-	/varset gl_nmqkbf 		0
-	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		0
-	/varset gl_nmghtg 		0
-	
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		0
-
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		0
-
-	/varset gl_ismele		true
-	/varset gl_iscstr		true
-	/varset gl_istank		true
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		true
-	
-	/return
-}
-
-sub Init_Ranger() {
-
-	/varset gl_qckbfs[4,4] 	"0"
-	/varset gl_tgtbfs[4,4] 	"0"
-	/varset gl_petbfs[4,4] 	"0"
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[6] 	"0"
-
-	/varset gl_assdir		"behind"
-
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
-
-	/varset gl_nmqkbf 		0
-	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		0
-	/varset gl_nmghtg 		0
-	
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		0
-
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		0
-
-	/varset gl_ismele		true
-	/varset gl_iscstr		true
-	/varset gl_istank		false
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		false
-	
-	/return
-}
-
-sub Init_Rogue() {
-
-	/varset gl_qckbfs[4,4] 	"0"
-	/varset gl_tgtbfs[4,4] 	"0"
-	/varset gl_petbfs[4,4] 	"0"
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[1] 	"Backstab"
-
-	/varset gl_assdir		"behind"
-
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
-
-	/varset gl_nmqkbf 		0
-	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		0
-	/varset gl_nmghtg 		0
-	
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		0
-
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		0
-
-	/varset gl_ismele		true
-	/varset gl_iscstr		false
-	/varset gl_istank		false
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		false
-	
-	/return
-}
-
-sub Init_Shadow_Knight() {
-
-	/varset gl_qckbfs[4,4] 	"0"
-	/varset gl_tgtbfs[4,4] 	"0"
-	/varset gl_petbfs[4,4] 	"0"
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[6] 	"0"
-
-	/varset gl_assdir		"behind"
-
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
-
-	/varset gl_nmqkbf 		0
-	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		0
-	/varset gl_nmghtg 		0
-	
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		0
-
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		0
-
-	/varset gl_ismele		true
-	/varset gl_iscstr		true
-	/varset gl_istank		true
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		true
-	
-	/return
-}
-
-sub Init_Shaman() {
-
-	/varset gl_qckbfs[1,1] "Talisman of Celerity"
-	/varset gl_qckbfs[1,2] "Hrelgar"
-	/varset gl_qckbfs[1,3] "6"
-	/varset gl_qckbfs[1,4] "${Spell[${gl_qckbfs[1,1]}].ID}"
-
-	/varset gl_qckbfs[2,1] "Talisman of Celerity"
-	/varset gl_qckbfs[2,2] "Malachi"
-	/varset gl_qckbfs[2,3] "6"
-	/varset gl_qckbfs[2,4] "${Spell[${gl_qckbfs[2,1]}].ID}"
-
-	/varset gl_qckbfs[3,1] "Talisman of Celerity"
-	/varset gl_qckbfs[3,2] "Plurbus"
-	/varset gl_qckbfs[3,3] "6"
-	/varset gl_qckbfs[3,4] "${Spell[${gl_qckbfs[3,1]}].ID}"
-
-	/varset gl_qckbfs[4,1] "Talisman of Celerity"
-	/varset gl_qckbfs[4,2] "Khizzren"
-	/varset gl_qckbfs[4,3] "6"
-	/varset gl_qckbfs[4,4] "${Spell[${gl_qckbfs[4,1]}].ID}"
-
-	/varset gl_qckbfs[5,1] "Spirit of the Leopard"
-	/varset gl_qckbfs[5,2] "Hrelgar"
-	/varset gl_qckbfs[5,3] "7"
-	/varset gl_qckbfs[5,4] "${Spell[${gl_qckbfs[5,1]}].ID}"
-
-	/varset gl_qckbfs[6,1] "Spirit of the Leopard"
-	/varset gl_qckbfs[6,2] "Malachi"
-	/varset gl_qckbfs[6,3] "7"
-	/varset gl_qckbfs[6,4] "${Spell[${gl_qckbfs[6,1]}].ID}"
-
-	/varset gl_qckbfs[7,1] "Spirit of the Leopard"
-	/varset gl_qckbfs[7,2] "Plurbus"
-	/varset gl_qckbfs[7,3] "7"
-	/varset gl_qckbfs[7,4] "${Spell[${gl_qckbfs[7,1]}].ID}"
-
-	/varset gl_qckbfs[8,1] "Spirit of the Leopard"
-	/varset gl_qckbfs[8,2] "Khizzren"
-	/varset gl_qckbfs[8,3] "7"
-	/varset gl_qckbfs[8,4] "${Spell[${gl_qckbfs[8,1]}].ID}"
-
-	/varset gl_tgtbfs[1,1] "Spirit of Bih`li"
-	/varset gl_tgtbfs[1,2] ""
-	/varset gl_tgtbfs[1,3] "5"
-	/varset gl_tgtbfs[1,4] "${Spell[${gl_tgtbfs[1,1]}].ID}"
-
-	/varset gl_tgtbfs[2,1] "Focus of the Seventh"
-	/varset gl_tgtbfs[2,2] ""
-	/varset gl_tgtbfs[2,3] "4"
-	/varset gl_tgtbfs[2,4] "${Spell[${gl_tgtbfs[2,1]}].ID}"
-
-	/varset gl_tgtbfs[3,1] "Talisman of the Boar"
-	/varset gl_tgtbfs[3,2] ""
-	/varset gl_tgtbfs[3,3] "3"
-	/varset gl_tgtbfs[3,4] "${Spell[${gl_tgtbfs[3,1]}].ID}"
-
-	/varset gl_petbfs[1,1] "Spirit Quickening"
-	/varset gl_petbfs[1,2] "Pet"
-	/varset gl_petbfs[1,3] "4"
-	/varset gl_petbfs[1,4] "${Spell[${gl_petbfs[1,1]}].ID}"
-
-	/varset gl_petbfs[2,1] "Spirit of the Leopard"
-	/varset gl_petbfs[2,2] "Pet"
-	/varset gl_petbfs[2,3] "7"
-	/varset gl_petbfs[2,4] "${Spell[${gl_petbfs[2,1]}].ID}"
-
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[6] 	"0"
-
-	/varset gl_assdir		"behind"
-
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"Quiescence"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
-
-	/varset gl_nmqkbf 		8
-	/varset gl_nmtgbf 		3
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		0
-	/varset gl_nmghtg 		0
-	
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		80
-
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		1
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		8
-
-	/varset gl_ismele		false
-	/varset gl_iscstr		true
-	/varset gl_istank		false
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		true
-	
-	/return
-}
-
-sub Init_Warrior() {
-
-	/varset gl_qckbfs[4,4] 	"0"
-	/varset gl_tgtbfs[4,4] 	"0"
-	/varset gl_petbfs[4,4] 	"0"
-	/varset gl_debufs[4,4]	"0"
-	
-	/varset gl_cbtabs[1] 	"Kick"
-	/varset gl_cbtabs[2] 	"Taunt"
-
-	/varset gl_assdir		"behind"
-
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"0"
-	/varset gl_petspl 		"0"
-
-	/varset gl_nmqkbf 		0
-	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		2
-	/varset gl_nmghtg 		0
-	
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		0
-
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		0
-	/varset gl_petgem 		0
-
-	/varset gl_ismele		true
-	/varset gl_iscstr		false
-	/varset gl_istank		true
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		false
-	
-	/return
-}
-
-sub Init_Wizard() {
-
-	/varset gl_qckbfs[4,4] 	"0"
-	/varset gl_tgtbfs[4,4] 	"0"
-	/varset gl_petbfs[4,4] 	"0"
-	/varset gl_debufs[4,4]	"0"
-	/varset gl_cbtabs[6] 	"0"
-
-	/varset gl_assdir		"behind"
-
-	/varset gl_ghlspl 		"0"
-	/varset gl_thlspl		"0"
-	/varset gl_hotspl 		"0"
-	/varset gl_nukspl 		"Lure of Frost"
-	/varset gl_petspl 		"0"
-
-	/varset gl_nmqkbf 		0
-	/varset gl_nmtgbf 		0
-	/varset gl_nmptbf 		0
-	/varset gl_nmabls 		0
-	/varset gl_nmghtg 		0
-	
-	/varset gl_ghlpct 		0
-	/varset gl_helpct 		0
-	/varset gl_hotpct 		0
-
-	/varset gl_ghlgem 		0
-	/varset gl_helgem 		0
-	/varset gl_hotgem 		0
-	/varset gl_nukgem 		1
-	/varset gl_petgem 		0
-
-	/varset gl_ismele		false
-	/varset gl_iscstr		true
-	/varset gl_istank		false
-	/varset gl_usebow 		false
-	/varset gl_shdmed 		true
-	
 	/return
 }
 

@@ -17,7 +17,7 @@ sub Check_Actions() {
 	/call "Check_Target_Heals"
 	/if (${Macro.Return}) /return
 
-	/call "Check_Quick_Buffs"
+	/call "Check_Constant_Buffs"
 	/if (${Macro.Return}) /return
 
 	/call "Check_HoTs"
@@ -77,7 +77,7 @@ sub Check_Attack() {
 				/return
 			}
 
-			/if (${gl_usebow}) {
+			/if (${gl_shdsht}) {
 			
 				/stick moveback ID ${gl_asstid} ${gl_rngdis}
 			
@@ -157,8 +157,6 @@ sub Check_Follow() {
 
 		} else {
 
-			/bc My follow target has zoned.
-
 			/varset gl_isfwlg false
 			/varset gl_fwlgid 0
 
@@ -232,7 +230,7 @@ sub Check_Group_Heals() {
 
 		/next i
 
-		/if (${helcnt} >= ${gl_nmghlt}) {
+		/if (${helcnt} >= ${gl_nmghtg}) {
 
 			/call Cast ${gl_ghlspl} ${gl_ghlgem} ${Me.ID}
 
@@ -270,9 +268,9 @@ sub Check_Target_Heals() {
 
 		/next i
 
-		/if (${lwstpc} < ${gl_helpct}) {
+		/if (${lwstpc} < ${gl_thlpct}) {
 
-			/call Cast ${gl_thlspl} ${gl_helgem} ${hltgid}
+			/call Cast ${gl_thlspl} ${gl_thlgem} ${hltgid}
 
 			/return 1
 		}
@@ -323,30 +321,30 @@ sub Check_HoTs() {
 	/return 0
 }
 
-sub Check_Quick_Buffs() {
+sub Check_Constant_Buffs() {
 
-	/if (${gl_nmqkbf} > 0 && !${Me.Moving}) {
+	/if (${gl_nmcsbf} > 0 && !${Me.Moving}) {
 
-		/declare bufspl string 	local 
+		/declare bufspl string 	local
+		/declare bufgem string 	local 
 		/declare buftgt string 	local
-		/declare bufgem string 	local
 		/declare buffid string 	local
 		/declare i 		int 	local
 
-		/for i 1 to ${gl_nmqkbf}
+		/for i 1 to ${gl_nmcsbf}
 
-			/varset bufspl ${gl_qckbfs[${i},1]}
-			/varset buftgt ${gl_qckbfs[${i},2]}
-			/varset bufgem ${gl_qckbfs[${i},3]}
-			/varset buffid ${gl_qckbfs[${i},4]}
+			/varset bufspl ${gl_cstbfs[${i},1]}
+			/varset bufgem ${gl_cstbfs[${i},2]}
+			/varset buftgt ${gl_cstbfs[${i},3]}
+			/varset buffid ${Spell[${bufspl}].ID}
 
 			/if (${Me.CurrentMana} < ${Spell[${bufspl}].Mana} + 100) /return 0
 
 			/if (${Spawn[PC ${buftgt}].ID} && ${Spawn[PC ${buftgt}].Distance} < ${gl_spldis}) {
-			
+
 				/if (!${NetBots[${buftgt}].Buff.Find[${buffid}]}) {
 				
-					/call Cast ${bufspl} ${bufgem} ${Spawn[${buftgt}].ID}
+					/call Cast ${bufspl} ${bufgem} ${Spawn[PC ${buftgt}].ID}
 
 					/if (${Macro.Return}) /return 1
 				} 
@@ -378,18 +376,18 @@ sub Check_Pet_Buffs() {
 
 	/if (${gl_nmptbf} > 0 && ${Me.Pet.ID}) {
 
-		/declare bufspl string 	local 
+		/declare bufspl string 	local
+		/declare bufgem string 	local 
 		/declare buftgt string 	local
-		/declare bufgem string 	local
 		/declare buffid string 	local
 		/declare i 		int 	local
 		
-		/for i 1 to ${gl_nmqkbf}
+		/for i 1 to ${gl_nmcsbf}
 
-			/varset bufspl ${gl_petbfs[${i},1]}
-			/varset buftgt ${gl_petbfs[${i},2]}
-			/varset bufgem ${gl_petbfs[${i},3]}
-			/varset buffid ${gl_petbfs[${i},4]}
+			/varset bufspl ${gl_cstbfs[${i},1]}
+			/varset bufgem ${gl_cstbfs[${i},2]}
+			/varset buftgt ${gl_cstbfs[${i},3]}
+			/varset buffid ${Spell[${bufspl}].ID}
 	
 			/if (${Me.CurrentMana} < ${Spell[${bufspl}].Mana} + 100) /return 0
 

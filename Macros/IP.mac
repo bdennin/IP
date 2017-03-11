@@ -7,6 +7,8 @@
 #include IP_Macro_Events.inc
 #include IP_Macro_Setup.inc
 
+#include IP_Templates.inc
+
 sub Main() {
 
 	/call "Setup"
@@ -24,7 +26,6 @@ sub Main() {
 
 	/return
 }
-
 
 |Add auto-assist
 |Add netfollow
