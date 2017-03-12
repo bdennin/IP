@@ -6,8 +6,6 @@ sub Setup() {
 	
 	/call "Check_Plugins"
 
-	/if (${Me.Class.Name.Equal["Bard"]}) /squelch /twist 1 2 3 4
-
 	/squelch /tgb on
 	/squelch /hidecorpse looted
 

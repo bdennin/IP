@@ -11,6 +11,8 @@ sub Check_Actions() {
 		/return
 	}
 
+	/if (${Me.Moving}) /return
+
 	/call "Check_Group_Heals"
 	/if (${Macro.Return}) /return
 
@@ -191,6 +193,8 @@ sub Check_Zone() {
 		/varset gl_zontmr 0s
 		/varset gl_curzon ${Zone.Name}
 
+		/if (${Me.Class.Name.Equal["Bard"]}) /squelch /twist 1 2 3 4
+		
 		/if (${gl_iscstr}) {
 
 			/loadspells ${gl_splset}

@@ -156,8 +156,8 @@ sub Init_Cleric() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		"80"
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		"3"		
 
-	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		"Complete Heal"
-	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			"2"
+	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		"Holy Light"
+	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			"1"
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Percent"		"70"
 
 	/ini ${gl_botini} "Heal_Over_Time" 	"Heal_Over_Time_Spell" 		""
@@ -641,8 +641,8 @@ sub Init_Shaman() {
 	/ini ${gl_botini} "Nuke" 			"Nuke_Spell" 				""
 	/ini ${gl_botini} "Nuke"		 	"Nuke_Gem" 					""
 
-	/ini ${gl_botini} "Pet" 			"Pet_Spell" 				""
-	/ini ${gl_botini} "Pet"		 		"Pet_Gem" 					""
+	/ini ${gl_botini} "Pet" 			"Pet_Spell" 				"True Spirit"
+	/ini ${gl_botini} "Pet"		 		"Pet_Gem" 					"8"
 
 	/ini ${gl_botini} "Debuffs" 		"Debuff_Spell#1" 			""
 	/ini ${gl_botini} "Debuffs" 		"Debuff_Gem#1" 				""
@@ -680,9 +680,12 @@ sub Init_Shaman() {
 	/ini ${gl_botini} "Command_Buffs" 	"Command_Buff_Spell#3"	 	"Spirit of Bih`li"
 	/ini ${gl_botini} "Command_Buffs" 	"Command_Buff_Gem#3" 		"5"
 
-	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Spell#1" 			""
-	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Gem#1" 			""
-	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Owner#1" 			""
+	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Spell#1" 			"Spirit Quickening"
+	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Gem#1" 			"3"
+	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Owner#1" 			"Terakka"
+	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Spell#2" 			"Sprit of the Leopard"
+	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Gem#2" 			"7"
+	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Owner#2" 			"Terakka"
 
 	/return
 }

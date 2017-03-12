@@ -29,7 +29,6 @@ sub Main() {
 
 |Add auto-assist
 |Add netfollow
-|Fix ranged assist
 |Add unstuck to auto
 |Add debuffs
 |Add resist check for non-detrimental
