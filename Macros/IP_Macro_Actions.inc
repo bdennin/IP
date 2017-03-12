@@ -373,7 +373,7 @@ sub Check_Pet_Summon() {
 
 			/call Cast ${gl_petspl} ${gl_petgem} ${Me.ID}
 
-			/varset pettid 0
+			/varset gl_pettid 0
 
 			/return 1
 		}

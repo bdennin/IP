@@ -177,6 +177,8 @@ sub Event_Gate(string line) {
 
 		/interrupt
 
+		/delay 2
+
 		/aa act origin
 
 		/delay 18s

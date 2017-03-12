@@ -33,6 +33,9 @@ sub Main() {
 |Add debuffs
 |Add resist check for non-detrimental
 |Add timers for debuffs
+|Add click buffs
+|add click
+|Add rez target
 
 |bdens01 - Hrelgar - Warrior
 |bdens02 - Culdarra - Cleric
