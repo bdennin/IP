@@ -13,16 +13,19 @@ sub Check_Actions() {
 
 	/if (${Me.Moving}) /return
 
-	/call "Check_Group_Heals"
+	/call "Check_Group_Heal"
 	/if (${Macro.Return}) /return
 
-	/call "Check_Target_Heals"
+	/call "Check_Complete_Heal"
+	/if (${Macro.Return}) /return
+
+	/call "Check_Target_Heal"
 	/if (${Macro.Return}) /return
 
 	/call "Check_Constant_Buffs"
 	/if (${Macro.Return}) /return
 
-	/call "Check_HoTs"
+	/call "Check_HoT"
 	/if (${Macro.Return}) /return
 
 	/call "Check_Cannibalize"
@@ -37,7 +40,7 @@ sub Check_Actions() {
 	/call "Check_Debuffs"
 	/if (${Macro.Return}) /return
 	
-	/call "Check_Nukes"
+	/call "Check_Nuke"
 	/if (${Macro.Return}) /return
 	
 	/return
@@ -209,10 +212,12 @@ sub Check_Zone() {
 	/return
 }
 
-sub Check_Group_Heals() {
+sub Check_Group_Heal() {
 	
 	/if (${Bool[${gl_ghlspl}]}) {
 		
+		/echo checking group heal
+
 		/if (${Me.CurrentMana} < ${Spell[${gl_ghlspl}].Mana} + 100) /return 0
 
 		/declare cncbts 	string 	local 	${NetBots.Client}
@@ -248,9 +253,54 @@ sub Check_Group_Heals() {
 	/return 0
 }	
 
-sub Check_Target_Heals() {
+sub Check_Complete_Heal() {
+
+	/if (${Bool[${gl_chlspl}]}) {
+
+		/echo checking cheal
+
+		/if (${Me.CurrentMana} < ${Spell[${gl_chlspl}].Mana} + 100) /return 0
+
+		/declare cncbts 	string 	local 	${NetBots.Client}
+		/declare netbot 	string 	local 	"0"
+		/declare lwstpc 	int 	local 	100	
+		/declare hltgid 	int 	local 	
+		/declare i 			int 	local
+
+		/for i 1 to ${NetBots.Counts} 
+			
+			/varset netbot ${cncbts.Arg[${i}]}
+
+			/if (${Spawn[PC ${netbot}].Class.Name.Equal["Warrior"]}) {
+				
+				/if (${Spawn[PC ${netbot}].ID} && ${Spawn[PC ${netbot}].Distance} < ${gl_spldis}) {
+
+					/if (${NetBots[${netbot}].PctHPs} < ${lwstpc}) {
+
+						/varset lwstpc ${NetBots[${netbot}].PctHPs}
+						/varset hltgid ${NetBots[${netbot}].ID}
+					}
+				}
+			}
+
+		/next i
+
+		/if (${lwstpc} < ${gl_chlpct}) {
+
+			/call Cast ${gl_chlspl} ${gl_chlgem} ${hltgid}
+
+			/return 1
+		}
+	}
+
+	/return 0
+}
+
+sub Check_Target_Heal() {
 
 	/if (${Bool[${gl_thlspl}]}) {
+
+		/echo checking theal
 
 		/if (${Me.CurrentMana} < ${Spell[${gl_thlspl}].Mana} + 100) /return 0
 
@@ -286,9 +336,11 @@ sub Check_Target_Heals() {
 	/return 0
 }
 
-sub Check_HoTs() {
+sub Check_HoT() {
 
 	/if (${Bool[${gl_hotspl}]}) {
+
+		/echo checking hot
 
 		/if (${Me.CurrentMana} < ${Spell[${gl_hotspl}].Mana} + 100) /return 0
 
@@ -455,7 +507,7 @@ sub Check_Cannibalize() {
 	/return 0
 }
 
-sub Check_Nukes() {
+sub Check_Nuke() {
 	
 	/if (!${gl_dmgtmr} && ${Bool[${gl_nukspl}]}) {
 

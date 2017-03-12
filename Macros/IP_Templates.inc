@@ -15,6 +15,10 @@ sub Init_Bard() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
 
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
+
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Percent"		""
@@ -62,6 +66,10 @@ sub Init_Beastlord() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
 
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
+
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Percent"		""
@@ -107,7 +115,11 @@ sub Init_Berserker() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
-	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
+	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""
+
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
 
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""
@@ -154,11 +166,15 @@ sub Init_Cleric() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			"Word of Vigor"
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			"3"
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		"80"
-	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		"3"		
+	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		"3"	
+
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		"Complete Heal"
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		"2"
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		"80"
 
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		"Holy Light"
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			"1"
-	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Percent"		"70"
+	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Percent"		"60"
 
 	/ini ${gl_botini} "Heal_Over_Time" 	"Heal_Over_Time_Spell" 		""
 	/ini ${gl_botini} "Heal_Over_Time" 	"Heal_Over_Time_Gem" 		""
@@ -203,7 +219,11 @@ sub Init_Druid() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
-	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
+	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""				
+
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
 
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""
@@ -250,7 +270,11 @@ sub Init_Enchanter() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
-	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
+	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""				
+
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
 
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""
@@ -297,7 +321,11 @@ sub Init_Magician() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
-	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
+	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""				
+
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
 
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""
@@ -344,7 +372,11 @@ sub Init_Monk() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
-	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
+	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""				
+
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
 
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""
@@ -391,7 +423,11 @@ sub Init_Necromancer() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
-	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
+	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""				
+
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
 
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""
@@ -439,7 +475,11 @@ sub Init_Paladin() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
-	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
+	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""				
+
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
 
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""
@@ -486,7 +526,11 @@ sub Init_Ranger() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
-	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
+	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""				
+
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
 
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""
@@ -533,7 +577,11 @@ sub Init_Rogue() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
-	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
+	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""				
+
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
 
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""
@@ -581,7 +629,11 @@ sub Init_Shadow_Knight() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
-	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
+	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""				
+
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
 
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""
@@ -628,7 +680,11 @@ sub Init_Shaman() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
-	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
+	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""			
+
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
 
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""
@@ -650,12 +706,15 @@ sub Init_Shaman() {
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Spell#1" 	"Talisman of Celerity"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Gem#1" 		"6"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Target#1"	"Hrelgar"
+
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Spell#2" 	"Talisman of Celerity"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Gem#2" 		"6"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Target#2"	"Malachi"
+	
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Spell#3" 	"Talisman of Celerity"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Gem#3" 		"6"
-	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Target#3"	"Malachi"
+	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Target#3"	"Plurbus"
+	
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Spell#4" 	"Talisman of Celerity"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Gem#4" 		"6"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Target#4"	"Khizzren"
@@ -663,12 +722,15 @@ sub Init_Shaman() {
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Spell#5" 	"Spirit of the Leopard"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Gem#5" 		"7"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Target#5"	"Hrelgar"
+
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Spell#6" 	"Spirit of the Leopard"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Gem#6" 		"7"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Target#6"	"Malachi"
+	
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Spell#7" 	"Spirit of the Leopard"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Gem#7" 		"7"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Target#7"	"Plurbus"
+	
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Spell#8" 	"Spirit of the Leopard"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Gem#8" 		"7"
 	/ini ${gl_botini} "Constant_Buffs" 	"Constant_Buff_Target#8"	"Khizzren"
@@ -676,6 +738,7 @@ sub Init_Shaman() {
 	/ini ${gl_botini} "Command_Buffs" 	"Command_Buff_Spell#1"	 	"Talisman of the Boar"
 	/ini ${gl_botini} "Command_Buffs" 	"Command_Buff_Gem#1" 		3
 	/ini ${gl_botini} "Command_Buffs" 	"Command_Buff_Spell#2"	 	"Focus of the Seventh"
+	
 	/ini ${gl_botini} "Command_Buffs" 	"Command_Buff_Gem#2" 		"4"
 	/ini ${gl_botini} "Command_Buffs" 	"Command_Buff_Spell#3"	 	"Spirit of Bih`li"
 	/ini ${gl_botini} "Command_Buffs" 	"Command_Buff_Gem#3" 		"5"
@@ -683,6 +746,7 @@ sub Init_Shaman() {
 	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Spell#1" 			"Spirit Quickening"
 	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Gem#1" 			"3"
 	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Owner#1" 			"Terakka"
+	
 	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Spell#2" 			"Sprit of the Leopard"
 	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Gem#2" 			"7"
 	/ini ${gl_botini} "Pet_Buffs" 		"Pet_Buff_Owner#2" 			"Terakka"
@@ -705,7 +769,11 @@ sub Init_Warrior() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
-	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
+	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""				
+
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
 
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""
@@ -752,7 +820,11 @@ sub Init_Wizard() {
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Spell" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Gem" 			""
 	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Percent"		""
-	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""		
+	/ini ${gl_botini} "Group_Heal" 		"Group_Heal_Targets"		""				
+
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Spell" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Gem" 		""
+	/ini ${gl_botini} "Complete_Heal" 	"Complete_Heal_Percent"		""
 
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Spell" 		""
 	/ini ${gl_botini} "Target_Heal" 	"Target_Heal_Gem" 			""

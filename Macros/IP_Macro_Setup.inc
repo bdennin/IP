@@ -98,6 +98,10 @@ sub Setup_Class() {
 	/declare gl_ghlpct 		int 	outer
 	/declare gl_nmghtg 		int 	outer
 
+	/declare gl_chlspl		string 	outer
+	/declare gl_chlgem 		string 	outer
+	/declare gl_chlpct		int 	outer 	
+
 	/declare gl_thlspl		string 	outer
 	/declare gl_thlgem 		string 	outer
 	/declare gl_thlpct		int 	outer 	
@@ -163,6 +167,10 @@ sub Setup_Class() {
 	/varset gl_ghlgem "${Ini[${gl_botini},"Group_Heal","Group_Heal_Gem"]}"
 	/varset gl_ghlpct ${Ini[${gl_botini},"Group_Heal","Group_Heal_Percent"]}
 	/varset gl_nmghtg ${Ini[${gl_botini},"Group_Heal","Group_Heal_Targets"]}
+
+	/varset gl_chlspl "${Ini[${gl_botini},"Complete_Heal","Complete_Heal_Spell"]}"
+	/varset gl_chlgem "${Ini[${gl_botini},"Complete_Heal","Complete_Heal_Gem"]}"
+	/varset gl_chlpct ${Ini[${gl_botini},"Complete_Heal","Complete_Heal_Percent"]}
 
 	/varset gl_thlspl "${Ini[${gl_botini},"Target_Heal","Target_Heal_Spell"]}"
 	/varset gl_thlgem "${Ini[${gl_botini},"Target_Heal","Target_Heal_Gem"]}"
