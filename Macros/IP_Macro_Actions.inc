@@ -72,6 +72,8 @@ sub Check_Attack() {
 			/tar ID ${gl_asstid}
 			/delay 1
 
+			/attack on
+
 			/if (!${Target.ID} || ${Target.Type.Equal["Corpse"]}) {
 
 				/varset gl_incmbt false
@@ -84,17 +86,30 @@ sub Check_Attack() {
 
 			/if (${gl_shdsht}) {
 			
-				/stick moveback ID ${gl_asstid} ${gl_rngdis}
-			
+				/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid})
+				{
+					/stick moveback ID ${gl_asstid} ${gl_rngdis}
+					/tar ID ${gl_asstid}
+					/delay 1
+				}
+				
 				/if (${Me.RangedReady})	/ranged
 			
 			} else {
+				
+				/echo not act ${!${Stick.Active}}
+				/echo not tgt ${${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid}}
 
-				/declare abl 	string	local 
-				/declare i 		int 	local
+				/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid}) {
+
+					/stick moveback ID ${gl_asstid} ${gl_assdis} ${gl_assdir}
+				}
 
 				/stick moveback ID ${gl_asstid} ${gl_assdis} ${gl_assdir}
 				/attack on
+
+				/declare abl 	string	local 
+				/declare i 		int 	local
 
 				/for i 1 to ${gl_nmabls}
 
@@ -114,7 +129,6 @@ sub Check_Combat() {
 
 	/declare cncbts 	string 	local 	${NetBots.Client}
 	/declare netbot 	string 	local 	"0"
-	/declare cbtsts 	int 	local	
 	/declare i 			int 	local
 
 	/for i 1 to ${NetBots.Counts} 
@@ -123,9 +137,7 @@ sub Check_Combat() {
 
 		/if (${Spawn[PC ${netbot}].ID} && ${Spawn[PC ${netbot}].Distance} < ${gl_comdis}) {
 
-			/varset cbtsts ${NetBots[${netbot}].CombatState}
-
-			/if (${cbtsts} == 0 || ${cbtsts == 2}) {
+			/if (${NetBots[${netbot}].CombatState} == 0) {
 
 				/varset gl_incmbt true
 
@@ -156,14 +168,16 @@ sub Check_Follow() {
 				/stick off
 			
 			} else {
-	
-				/if (${gl_isfwlg} && ${Spawn[ID ${gl_fwlgid}].Distance} > ${gl_foldis} + 5.0) {
+
+				/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_fwlgid}) {
 
 					/stick ID ${gl_fwlgid} ${gl_foldis}
 				}
 			}
 
 		} else {
+
+			/bc My follow target has zoned.
 
 			/varset gl_isfwlg false
 			/varset gl_fwlgid 0
@@ -186,10 +200,18 @@ sub Check_Med() {
 			/return
 		}
 
-		/if (!${Me.Sitting} && !${Me.Moving}) {
+		/if (${Stick.Stopped} || !${Stick.Active}) {
 
-			/sit
+			/if (!${Me.Sitting} && !${Me.Moving}) {
+
+				/sit 
+			}
+
+		} else /if (!${Me.Standing}) {
+
+			/stand
 		}
+		
 	}
 
 	/return
@@ -202,13 +224,14 @@ sub Check_Zone() {
 		/varset gl_zontmr 0s
 		/varset gl_curzon ${Zone.Name}
 
-		/if (${Me.Class.Name.Equal["Bard"]}) /squelch /twist 1 2 3 4 5
-		
 		/if (${gl_iscstr}) {
 
 			/loadspells ${gl_splset}
+		}
 
-			/delay 3s
+		/if (${Me.Class.Name.Equal["Bard"]}) {
+
+			/squelch /twist 1 2 3 4 5
 		}
 	}
 
@@ -421,6 +444,8 @@ sub Check_Pet_Summon() {
 			/call Cast ${gl_petspl} ${gl_petgem} ${Me.ID}
 
 			/varset gl_pettid 0
+
+			/pet taunt off
 
 			/return 1
 		}
