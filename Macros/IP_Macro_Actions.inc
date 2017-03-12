@@ -114,6 +114,7 @@ sub Check_Combat() {
 
 	/declare cncbts 	string 	local 	${NetBots.Client}
 	/declare netbot 	string 	local 	"0"
+	/declare cbtsts 	int 	local	
 	/declare i 			int 	local
 
 	/for i 1 to ${NetBots.Counts} 
@@ -122,7 +123,9 @@ sub Check_Combat() {
 
 		/if (${Spawn[PC ${netbot}].ID} && ${Spawn[PC ${netbot}].Distance} < ${gl_comdis}) {
 
-			/if (${NetBots[${netbot}].CombatState} == 0) {
+			/varset cbtsts ${NetBots[${netbot}].CombatState}
+
+			/if (${cbtsts} == 0 || ${cbtsts == 2}) {
 
 				/varset gl_incmbt true
 
@@ -216,8 +219,6 @@ sub Check_Group_Heal() {
 	
 	/if (${Bool[${gl_ghlspl}]}) {
 		
-		/echo checking group heal
-
 		/if (${Me.CurrentMana} < ${Spell[${gl_ghlspl}].Mana} + 100) /return 0
 
 		/declare cncbts 	string 	local 	${NetBots.Client}
@@ -256,8 +257,6 @@ sub Check_Group_Heal() {
 sub Check_Complete_Heal() {
 
 	/if (${Bool[${gl_chlspl}]}) {
-
-		/echo checking cheal
 
 		/if (${Me.CurrentMana} < ${Spell[${gl_chlspl}].Mana} + 100) /return 0
 
@@ -300,8 +299,6 @@ sub Check_Target_Heal() {
 
 	/if (${Bool[${gl_thlspl}]}) {
 
-		/echo checking theal
-
 		/if (${Me.CurrentMana} < ${Spell[${gl_thlspl}].Mana} + 100) /return 0
 
 		/declare cncbts 	string 	local 	${NetBots.Client}
@@ -339,8 +336,6 @@ sub Check_Target_Heal() {
 sub Check_HoT() {
 
 	/if (${Bool[${gl_hotspl}]}) {
-
-		/echo checking hot
 
 		/if (${Me.CurrentMana} < ${Spell[${gl_hotspl}].Mana} + 100) /return 0
 
