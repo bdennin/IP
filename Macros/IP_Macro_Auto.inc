@@ -4,6 +4,7 @@ sub Setup_Auto() {
 	/declare pckldr string 	outer "Hrelgar"
 
 	/declare buftmr	timer 	outer 30m
+	/declare sumtmr timer 	outer 0
 	/declare movtmr timer 	outer 0
 	/declare baktmr timer 	outer 0
 	/declare rndtmr timer 	outer 0
@@ -42,6 +43,8 @@ sub Check_Auto_Actions() {
 	
 	/if (${Me.Name.NotEqual[${pckldr}]}) /return
 
+	/call "Check_Auto_Summon"
+
 	/call "Check_Auto_Danger" 
 	/if (${Macro.Return}) /return
 
@@ -52,6 +55,18 @@ sub Check_Auto_Actions() {
 	/if (${Macro.Return}) /return
 
 	/call "Check_Auto_Move"
+
+	/return
+}
+
+sub Check_Auto_Summon() {
+	
+	/if (!${sumtmr}) {
+
+		/bc warp to ${Me.ID}
+
+		/varset sumtmr 1m
+	}
 
 	/return
 }

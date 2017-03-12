@@ -1,6 +1,7 @@
 
 sub Check_Events() {
 
+	/doevents AA_Percent
 	/doevents Accept_Group
 	/doevents Accept_Raid
 	/doevents Assist
@@ -18,6 +19,14 @@ sub Check_Events() {
 	/doevents Stop
 	/doevents Take_Damage
 	/doevents Warp
+
+	/return
+}
+
+#event AA_Percent "<#*#> aa #1#"
+sub Event_AA_Percent(string line, int percent) {
+
+	/squelch /alt on ${percent}
 
 	/return
 }
@@ -137,14 +146,14 @@ sub Event_Follow(string line, int ID) {
 	}
 
 	/if (${Spawn[ID ${ID}].ID} && ${Spawn[ID ${ID}].Distance} < ${gl_comdis}) {
-	
-		/interrupt
 
 		/varset gl_isfwlg true
 		/varset gl_fwlgid ${ID}
 
 		/varset gl_incmbt false
 		/varset gl_asstid 0
+	
+		/interrupt
 
 		/attack off
 	}
@@ -157,15 +166,20 @@ sub Event_Gate(string line) {
 
 	/if (${Me.AltAbilityReady[Origin]}) {
 		
+		/varset gl_isfwlg false
+		/varset gl_fwlgid 0
+		
+		/varset gl_incmbt false
+		/varset gl_asstid 0
+
+		/squelch /stick off
+		/squelch /twist off
+
 		/interrupt
-
-		/twist off
-
-		/delay 2
 
 		/aa act origin
 
-		/delay 10s
+		/delay 18s
 	}
 
 	/return

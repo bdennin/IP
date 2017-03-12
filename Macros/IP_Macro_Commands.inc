@@ -15,11 +15,8 @@ sub Cast(string name, string gem, int ID) {
 			
 		/if (${Spawn[ID ${ID}].Type.Equal["Corpse"]} || ${Spawn[ID ${ID}].Distance} > ${gl_spldis}) {
 
-			/echo breaking cast
-
 			/interrupt
-			/goto :DoneCasting
-		
+			/goto :DoneCasting		
 		} 
 
 		/delay 1

@@ -180,7 +180,10 @@ sub Check_Med() {
 			/return
 		}
 
-		/if (!${Me.Sitting}) /sit
+		/if (!${Me.Sitting} && !${Me.Moving}) {
+
+			/sit
+		}
 	}
 
 	/return
@@ -193,7 +196,7 @@ sub Check_Zone() {
 		/varset gl_zontmr 0s
 		/varset gl_curzon ${Zone.Name}
 
-		/if (${Me.Class.Name.Equal["Bard"]}) /squelch /twist 1 2 3 4
+		/if (${Me.Class.Name.Equal["Bard"]}) /squelch /twist 1 2 3 4 5
 		
 		/if (${gl_iscstr}) {
 
@@ -369,6 +372,9 @@ sub Check_Pet_Summon() {
 			/if (${Me.CurrentMana} < ${Spell[${gl_petspl}].Mana} + 100) /return 0
 
 			/call Cast ${gl_petspl} ${gl_petgem} ${Me.ID}
+
+			/varset pettid 0
+
 			/return 1
 		}
 	}
