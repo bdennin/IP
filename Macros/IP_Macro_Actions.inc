@@ -95,9 +95,6 @@ sub Check_Attack() {
 			
 			} else {
 				
-				/echo not act ${!${Stick.Active}}
-				/echo not tgt ${${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid}}
-
 				/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid}) {
 
 					/stick moveback ID ${gl_asstid} ${gl_assdis} ${gl_assdir}

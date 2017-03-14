@@ -163,8 +163,12 @@ sub Event_Follow(string line, int ID) {
 
 #event Gate "<#*#> gate"
 sub Event_Gate(string line) {
+	
+	/if (${Bool[FindItem["Noobie Item v1"]]}) {
 
-	/if (${Me.AltAbilityReady[Origin]}) {
+		/itemnotify 0 rightmouseup
+
+	} else /if (${Me.AltAbilityReady[Origin]}) {
 		
 		/varset gl_isfwlg false
 		/varset gl_fwlgid 0

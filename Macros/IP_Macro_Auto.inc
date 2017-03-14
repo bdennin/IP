@@ -43,8 +43,6 @@ sub Check_Auto_Actions() {
 	
 	/if (${Me.Name.NotEqual[${pckldr}]}) /return
 
-	/call "Check_Auto_Summon"
-
 	/call "Check_Auto_Danger" 
 	/if (${Macro.Return}) /return
 
@@ -55,18 +53,6 @@ sub Check_Auto_Actions() {
 	/if (${Macro.Return}) /return
 
 	/call "Check_Auto_Move"
-
-	/return
-}
-
-sub Check_Auto_Summon() {
-	
-	/if (!${sumtmr}) {
-
-		/bc warp to ${Me.ID}
-
-		/varset sumtmr 1m
-	}
 
 	/return
 }
@@ -204,7 +190,7 @@ sub Check_Auto_Move() {
 		/tar ID ${id}
 		/delay 1
 
-		/if (${Target.Level} >= ${Me.Level}) {
+|**		/if (${Target.Level} >= ${Me.Level}) {
 
 			/echo Auto :: Target is too powerful. Switching targets.
 
@@ -212,7 +198,7 @@ sub Check_Auto_Move() {
 
 			/goto :AcquireTarget
 		}
-
+**|
 		/if (${Target.DistanceZ} > 30) {
 
 			/echo Auto :: Target is on a different plane. Switching targets.
