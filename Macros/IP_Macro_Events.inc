@@ -51,7 +51,7 @@ sub Event_Accept_Raid(string line) {
 
 #event Assist "<#1#> assist on #2#"
 sub Event_Assist(string line, string sender, int ID) {
-	
+
 	/if (${Spawn[${sender}].ID} == ${Me.ID}) /return
 
 	/if (${Spawn[PC ${sender}].ID} && ${Spawn[${sender}].Distance} < ${gl_comdis}) {
@@ -295,11 +295,11 @@ sub Event_Take_Damage(string line) {
 			/delay 5
 			/stand
 
-			/if (${Target.ID} && ${gl_incmbt}) /attack on
+			/if (${Target.ID} && ${gl_asstid} != 0) /attack on
 		}
 	}
 
-	/varset gl_dmgtmr 12s
+	/varset gl_dmgtmr 3s
 
 	/return
 }

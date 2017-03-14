@@ -48,9 +48,7 @@ sub Check_Actions() {
 
 sub Check_Attack() {
 	
-	/if (${gl_incmbt}) {
-
-		/if (!${gl_asstid}) /return
+	/if (${gl_asstid} != 0) {
 
 		/if (${Me.Pet.ID}) {
 			
@@ -154,7 +152,7 @@ sub Check_Combat() {
 
 sub Check_Follow() {
 	
-	/if (${gl_isfwlg} && !${gl_incmbt}) {
+	/if (${gl_isfwlg} && !${gl_asstid} != 0) {
 
 		/if (${Spawn[ID ${gl_fwlgid}].ID}) {
 
@@ -496,7 +494,7 @@ sub Check_Debuffs() {
 
 sub Check_Cannibalize() {
 
-	/if (${gl_incmbt}) {
+	/if (${gl_asstid} != 0) {
 
 		/if (${gl_iscstr}) {
 
@@ -531,7 +529,7 @@ sub Check_Nuke() {
 	
 	/if (!${gl_dmgtmr} && ${Bool[${gl_nukspl}]}) {
 
-		/if (${gl_incmbt}) {
+		/if (${gl_asstid} != 0) {
 			
 			/if (${Me.CurrentMana} < ${Spell[${gl_nukspl}].Mana}) /return 0
 
