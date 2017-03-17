@@ -1,5 +1,5 @@
 
-#turbo 20
+#turbo 1
 
 #include IP_Macro_Actions.inc
 #include IP_Macro_Auto.inc
@@ -10,6 +10,8 @@
 #include IP_Templates.inc
 
 sub Main() {
+	
+	/declare local
 
 	/call "Setup"
 	/call "Setup_Auto"
@@ -52,6 +54,5 @@ sub Main() {
 |bdens01 - Hrelgar - Warrior
 |bdens02 - Culdarra - Cleric
 |bdens03 - Terakka - Shaman
-|bdens04 - ? - Paladin
-|bdens05 - ? - Bard
-|bdens06 - ? - Rogue 
+|bdens04 - Geris - Paladin
+|bdens06 - Keldoran - 

@@ -5,15 +5,16 @@ sub Setup_Auto() {
 
 	/declare buftmr	timer 	outer 30m
 	/declare sumtmr timer 	outer 0
-	/declare movtmr timer 	outer 0
 	/declare baktmr timer 	outer 0
 	/declare rndtmr timer 	outer 0
+	
+	/declare lstdis float 	outer 0.0
+	/declare agrdis float 	outer 35.0
 
 	/declare begmed int 	outer 20
 	/declare endmed int 	outer 90
-	/declare acttgt int 	outer 1
-	/declare agrdis int 	outer 40
-
+	/declare curtgt int 	outer 0
+	
 	/declare atomat bool 	outer false
 	/declare medtng bool 	outer false
 
@@ -43,7 +44,7 @@ sub Check_Auto_Actions() {
 	
 	/if (${Me.Name.NotEqual[${pckldr}]}) /return
 
-	/call "Check_Auto_Danger" 
+	/call "Check_Auto_Nearby" 
 	/if (${Macro.Return}) /return
 
 	/call "Check_Auto_Buffs"
@@ -52,43 +53,17 @@ sub Check_Auto_Actions() {
 	/call "Check_Auto_Med"
 	/if (${Macro.Return}) /return
 
-	/call "Check_Auto_Move"
+	/call "Check_Auto_Target"
 
 	/return
 }
 
-sub Check_Auto_Danger() {
+sub Check_Auto_Nearby() {
 
-	/declare nrstid int local 
+	/declare nrstid int local ${NearestSpawn["NPC"].ID}
 
-	/varset nrstid ${NearestSpawn["NPC"].ID}
-
-	/if (${Target.ID} && ${Target.Distance} < ${gl_foldis}) {
-
-		/if (${Target.ID} != ${gl_asstid}) {
-			
-			/echo Auto :: Target was first to attack me.
-				
-			/varset gl_asstid ${Target.ID}
-			/varset gl_incmbt true
-
-			/bc assist on ${Target.ID}
-		}
-
-		/tar ID ${gl_asstid}
-		/delay 1
-		/stick ID ${gl_asstid} ${gl_assdis}
-		/attack on
-
-		/varset acttgt 1
-
-		/delay 1s
-
-		/return 1
-	}
-
-	/if (${Spawn[ID ${nrstid}].Distance} < ${agrdis}) {
-
+	/if (${Spawn[ID ${nrstid}].Distance3D} < ${agrdis} && ${Spawn[ID ${nrstid}].LineOfSight}) {
+		
 		/if (${nrstid} != ${gl_asstid}) {
 
 			/echo Auto :: Found target nearby.
@@ -103,13 +78,34 @@ sub Check_Auto_Danger() {
 			/stick ID ${gl_asstid} ${gl_assdis}
 			/attack on
 
-			/varset acttgt 1
+			/delay 1s
+
+			/return 1
+
+		}  /if (${gl_asstid} != 0) {
+
+			/if (${Target.ID} != ${gl_asstid}) {
+
+				/echo Auto :: Target was first to attack me.
+				
+				/varset gl_asstid ${Target.ID}
+				/varset gl_incmbt true
+
+				/bc assist on ${Target.ID}
+			}
+
+			/tar ID ${gl_asstid}
+			/delay 1
+			/stick ID ${gl_asstid} ${gl_assdis}
+			/attack on
 
 			/delay 1s
 
 			/return 1
 		}
 	}
+
+	/echo
 
 	/return 0
 }
@@ -175,44 +171,50 @@ sub Check_Auto_Med() {
 	/return 0
 }
 
-sub Check_Auto_Move() {
+sub Check_Auto_Target() {
+			
+	/declare 	id	int 	local 0
+	/declare  	cnt	int 	local 2
+	/declare 	dis	float 	local 0.0
+
+	:AcquireTarget
+
+	/if (${NearestSpawn["NPC"].Distance3D} > ${gl_agrdis}) {
 	
-	/if (!${movtmr}) {
+		/echo ${cnt}
 
-		/echo Auto :: Finding target...
-		
-		/declare 	id int local 0
-		
-		:AcquireTarget
-
-		/varset 	id ${NearestSpawn[${acttgt},"NPC"].ID}
+		/varset id 	${NearestSpawn[${cnt},"NPC"].ID}
 
 		/tar ID ${id}
 		/delay 1
 
-|**		/if (${Target.Level} >= ${Me.Level}) {
+		/if (${Target.DistanceZ} > 20.0) {
 
-			/echo Auto :: Target is too powerful. Switching targets.
+			/echo Auto :: Target is on another plane.  Switching targets.
 
-			/varcalc acttgt ${acttgt} + 1
-
-			/goto :AcquireTarget
-		}
-**|
-		/if (${Target.DistanceZ} > 30) {
-
-			/echo Auto :: Target is on a different plane. Switching targets.
-
-			/varcalc acttgt ${acttgt} + 1
+			/varcalc cnt ${cnt} + 1
 
 			/goto :AcquireTarget
 		}
 
-		/varset movtmr 5s
+		/echo Auto :: Target ${id} valid; Attempting to connect...
+
+		/varset dis ${Target.Distance3D}
 
 		/stick ID ${id} ${gl_assdis}		
 
-		/varcalc acttgt ${acttgt} + 1
+		/delay 5
+
+		/echo TD : ${Target.Distance} : Saved Dis : ${dis}
+
+		/if (${Target.Distance3D} >= ${dis})  {
+
+			/echo Auto :: Trouble getting to target.  Switching targets.
+
+			/varcalc cnt ${cnt} + 1
+
+			/goto :AcquireTarget
+		}
 	}
 
 	/return 

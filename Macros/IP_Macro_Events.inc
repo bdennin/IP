@@ -1,6 +1,6 @@
 
 sub Check_Events() {
-
+	
 	/doevents AA_Percent
 	/doevents Accept_Group
 	/doevents Accept_Raid
@@ -165,8 +165,23 @@ sub Event_Follow(string line, int ID) {
 sub Event_Gate(string line) {
 	
 	/if (${Bool[FindItem["Noobie Item v1"]]}) {
+		
+		/varset gl_isfwlg false
+		/varset gl_fwlgid 0
+		
+		/varset gl_incmbt false
+		/varset gl_asstid 0
+
+		/squelch /stick off
+		/squelch /twist off
+		
+		/interrupt
+
+		/delay 2
 
 		/itemnotify 0 rightmouseup
+
+		/delay 4s
 
 	} else /if (${Me.AltAbilityReady[Origin]}) {
 		
@@ -277,9 +292,11 @@ sub Event_Start_Enrage(string line) {
 	/return
 } 
 
-#event Stop "<#*#> stop"
-sub Event_Stop(string line) {
+#event Stop "<#1#> stop"
+sub Event_Stop(string line, string sender) {
 	
+	/if (${Me.Name.Equal[${sender}]}) /return
+
 	/varset gl_isfwlg false
 	/varset gl_fwlgid 0
 			

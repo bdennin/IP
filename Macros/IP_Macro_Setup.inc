@@ -24,8 +24,7 @@ sub Setup_Global() {
 	/declare gl_curzon	string 	outer 	"0"
 
 	/declare gl_dmgtmr	timer  	outer	0s
-	/declare gl_zontmr 	timer 	outer 	0s
-		
+	
 	/declare gl_fwlgid	int 	outer	0
 	/declare gl_asstid	int 	outer	0
 	/declare gl_pettid 	int 	outer 	0	
@@ -85,6 +84,7 @@ sub Setup_Class() {
 	
 	/declare gl_assdir		string 	outer
 	/declare gl_ismele		bool 	outer
+	/declare gl_ishelr 		bool 	outer
 	/declare gl_iscstr		bool 	outer
 	/declare gl_istank		bool 	outer
 	/declare gl_shdsht 		bool 	outer
@@ -145,6 +145,7 @@ sub Setup_Class() {
 
 	/varset gl_assdir ${Ini[${gl_botini},"Control","Assist_Direction"]}
 	/varset gl_ismele ${Ini[${gl_botini},"Control","Should_Melee"]}
+	/varset gl_ishelr ${Ini[${gl_botini},"Control","Should_Heal"]}
 	/varset gl_iscstr ${Ini[${gl_botini},"Control","Should_Cast"]}
 	/varset gl_istank ${Ini[${gl_botini},"Control","Should_Tank"]}
 	/varset gl_shdsht ${Ini[${gl_botini},"Control","Should_Shoot"]}
