@@ -297,7 +297,8 @@ sub Event_Stop(string line, string sender) {
 	
 	/if (${Me.Name.NotEqual[${sender}]}) {
 		
-		/netfollow off
+		/squelch /stick off
+		/squelch /netfollow off
 	}		
 	
 	/return 

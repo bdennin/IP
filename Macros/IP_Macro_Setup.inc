@@ -304,6 +304,15 @@ sub Check_Plugins() {
 		/if (${Select[${Stick.Status},NULL]}) /endmacro
 	}
 
+	/if (!${Plugin[MQ2NetAdvPath].Name.Length}) {
+		
+		/echo Plugin MQ2NetAdvPath is not loaded, attempting to resolve...
+		
+		/plugin MQ2NetAdvPath
+
+		/if (!${Plugin[MQ2NetAdvPath].Name.Length}) /endmacro
+	}	
+
 	/if (${Select[${Me.Class.ShortName},BRD]}) {
 		
 		/if (!${Plugin[MQ2Twist].Name.Length}) {

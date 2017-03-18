@@ -125,7 +125,7 @@ sub Check_Follow() {
 
 					/tar ID ${gl_fwlgid}
 					/delay 1
-					/netfollow on
+					/squelch /netfollow on
 					
 				} else {
 
@@ -134,7 +134,8 @@ sub Check_Follow() {
 					/varset gl_isfwlg false
 					/varset gl_fwlgid 0
 
-					/stick off
+					/squelch /stick off
+					/squelch /netfollow off
 				}
 
 			} else {
@@ -144,7 +145,8 @@ sub Check_Follow() {
 				/varset gl_isfwlg false
 				/varset gl_fwlgid 0
 
-				/stick off
+				/squelch /stick off
+				/squelch /netfollow off
 			}
 		}
 	}
