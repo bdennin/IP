@@ -14,6 +14,7 @@ sub Check_Events() {
 	/doevents Gate
 	/doevents Loot
 	/doevents Med
+	/doevents Rez
 	/doevents Speak
 	/doevents Start_Enrage
 	/doevents Stop
@@ -164,44 +165,22 @@ sub Event_Follow(string line, int ID) {
 #event Gate "<#*#> gate"
 sub Event_Gate(string line) {
 	
-	/if (${Bool[FindItem["Noobie Item v1"]]}) {
-		
-		/varset gl_isfwlg false
-		/varset gl_fwlgid 0
-		
-		/varset gl_incmbt false
-		/varset gl_asstid 0
+	/varset gl_isfwlg false
+	/varset gl_fwlgid 0
+	
+	/varset gl_incmbt false
+	/varset gl_asstid 0
 
-		/squelch /stick off
-		/squelch /twist off
-		
-		/interrupt
+	/squelch /stick off
+	/squelch /twist off
+	
+	/interrupt
 
-		/delay 2
+	/delay 2
 
-		/itemnotify 0 rightmouseup
+	/itemnotify 0 rightmouseup
 
-		/delay 4s
-
-	} else /if (${Me.AltAbilityReady[Origin]}) {
-		
-		/varset gl_isfwlg false
-		/varset gl_fwlgid 0
-		
-		/varset gl_incmbt false
-		/varset gl_asstid 0
-
-		/squelch /stick off
-		/squelch /twist off
-
-		/interrupt
-
-		/delay 2
-
-		/aa act origin
-
-		/delay 18s
-	}
+	/delay 4s
 
 	/return
 } 
@@ -258,6 +237,24 @@ sub Event_Med(string line) {
 	/return
 }
 
+#event Rez "<#*#> rez on #1#"
+sub Event_Rez(string line, int ID) {
+	
+	/if (${Me.Class.Name.Equal["Cleric"]}) {
+
+		/if (${Spawn[ID ${ID}].Distance} < ${gl_spldis}) {
+
+			/if (${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
+
+				/if (${Bool[FindItem["Water Sprinkler of Nem Ankh"]]}) {
+
+					/itemnotify 
+				}
+			}
+		}
+	}
+}
+
 #event Speak "<#*#> speak #1# #2#"
 sub Event_Speak(string line, int ID, string message) {	
 
@@ -284,8 +281,8 @@ sub Event_Speak(string line, int ID, string message) {
 	/return
 }
 
-#event Start_Enrage "#*# has become ENRAGED."
-sub Event_Start_Enrage(string line) {
+#event Start_Enrage "#1# has become ENRAGED."
+sub Event_Start_Enrage(string line, string name) {
 	
 	/if (${gl_istank}) /attack off
 
@@ -294,13 +291,14 @@ sub Event_Start_Enrage(string line) {
 
 #event Stop "<#1#> stop"
 sub Event_Stop(string line, string sender) {
-	
-	/if (${Me.Name.Equal[${sender}]}) /return
 
 	/varset gl_isfwlg false
 	/varset gl_fwlgid 0
-			
-	/stick off
+	
+	/if (${Me.Name.NotEqual[${sender}]}) {
+		
+		/netfollow off
+	}		
 	
 	/return 
 }
@@ -320,7 +318,7 @@ sub Event_Take_Damage(string line) {
 		}
 	}
 
-	/varset gl_dmgtmr 3s
+	/varset gl_dmgtmr 12s
 
 	/return
 }

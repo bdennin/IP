@@ -1,75 +1,183 @@
 
 sub Check_Actions() {
 
-	/call "Check_Zone"
-	/call "Check_Combat"
-	/call "Check_Med"
+	/call "Check_Attack"
+	/call "Check_Pet_Attack"
 	/call "Check_Follow"
+	/call "Check_Med"
 
-	/if (!${Me.Moving}) {
+	/call "Check_Combat"
+	/call "Check_Zone"
 
-		/if (${gl_ishelr}) {
-			
-			/call "Check_Group_Heal"
-			/if (${Macro.Return}) /return
+	/call "Check_Group_Heal"
+	/if (${Macro.Return}) /return
 
-			/call "Check_Complete_Heal"
-			/if (${Macro.Return}) /return
+	/call "Check_Complete_Heal"
+	/if (${Macro.Return}) /return
 
-			/call "Check_Target_Heal"
-			/if (${Macro.Return}) /return
+	/call "Check_Target_Heal"
+	/if (${Macro.Return}) /return
 
-			/call "Check_HoT"
-			/if (${Macro.Return}) /return
-		}
+	/call "Check_HoT"
+	/if (${Macro.Return}) /return
 		
-		/call "Check_Constant_Buffs"
-		/if (${Macro.Return}) /return
+	/call "Check_Constant_Buffs"
+	/if (${Macro.Return}) /return
 
-		/call "Check_Cannibalize"
-		/if (${Macro.Return}) /return
+	/call "Check_Cannibalize"
+	/if (${Macro.Return}) /return
 
-		/if (${Bool[${gl_petspl}]}) {
+	/call "Check_Pet_Summon"
+	/if (${Macro.Return}) /return
 
-			/call "Check_Pet_Attack"
+	/call "Check_Pet_Buffs"
+	/if (${Macro.Return}) /return
 
-			/call "Check_Pet_Summon"
-			/if (${Macro.Return}) /return
+	/call "Check_Debuffs"
+	/if (${Macro.Return}) /return
+	
+	/call "Check_Nuke"
+	/if (${Macro.Return}) /return	
+	
+	/return
+}
 
-			/call "Check_Pet_Buffs"
-			/if (${Macro.Return}) /return
+sub Check_Attack() {
+	
+	/if (${gl_asstid}) {
+		
+		/if (!${Spawn[ID ${gl_asstid}].ID} || ${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
+
+			/varset gl_asstid 0
+			/attack off
+
+			/return
 		}
 
 		/if (${gl_ismele}) {
 
-			/call "Check_Attack"
+			/tar ID ${gl_asstid}
+			/delay 1
+
+			/if (${gl_shdsht}) {
+			
+				/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid})
+				{
+					/stick ID ${gl_asstid} moveback ${gl_rngdis}
+				}
+				
+				/if (${Me.RangedReady})	/ranged
+			
+			} else {
+				
+				/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid}) {
+
+					/stick ID ${gl_asstid} moveback ${gl_assdis} ${gl_assdir}
+					/attack on
+				}
+
+				/declare abl 	string	local 
+				/declare i 		int 	local
+
+				/for i 1 to ${gl_nmabls}
+
+					/varset abl ${gl_cbtabs[${i}]}
+
+					/if (${Me.AbilityReady[${abl}]}) /doability ${abl}
+
+				/next i
+			}
 		}
+ 	}
+
+	/return
+}
+
+sub Check_Pet_Attack() {
 	
-		/call "Check_Debuffs"
-		/if (${Macro.Return}) /return
+	/if (${Me.Pet.ID}) {
 		
-		/call "Check_Nuke"
-		/if (${Macro.Return}) /return	
+		/if (${gl_pettid} != ${gl_asstid}) {
+		
+			/if (${Me.Pet.Distance} < ${gl_lshdis}) {
+
+				/varset gl_pettid ${gl_asstid}
+				/tar ID ${gl_pettid}
+				/delay 1
+
+				/pet attack
+			}
+		}
+	}
+
+	/return
+}
+
+sub Check_Follow() {
+	
+	/if (!${gl_asstid}) {
+
+		/if (${gl_isfwlg}) {
+
+			/if (${Spawn[ID ${gl_fwlgid}].ID}) {
+
+				/if (${Spawn[ID ${gl_fwlgid}].Distance} < ${gl_comdis}) {
+
+					/tar ID ${gl_fwlgid}
+					/delay 1
+					/netfollow on
+					
+				} else {
+
+					/bc I'm too far away to follow.
+
+					/varset gl_isfwlg false
+					/varset gl_fwlgid 0
+
+					/stick off
+				}
+
+			} else {
+
+				/bc My follow target has zoned.
+
+				/varset gl_isfwlg false
+				/varset gl_fwlgid 0
+
+				/stick off
+			}
+		}
 	}
 	
 	/return
 }
 
-sub Check_Zone() {
+sub Check_Med() {
 	
-	/if (${gl_curzon.NotEqual[${Zone.Name}]}) {
+	/if (${gl_ismedg}) {
+		
+		/if (${gl_dmgtmr}) {
 
-		/varset gl_curzon ${Zone.Name}
+			/if (${Me.Sitting}) /stand
 
-		/if (${gl_iscstr}) {
-
-			/loadspells ${gl_splset}
+			/return
 		}
 
-		/if (${Me.Class.Name.Equal["Bard"]}) {
+		/if (${Stick.Stopped} || !${Stick.Active}) {
 
-			/squelch /twist 1 2 3 4 5
+			/if (!${Me.Sitting} && !${Me.Moving}) {
+
+				/if (!${Corpse.Open} && !${Me.Casting.ID}) {
+
+					/sit 
+				}
+			}
+
+		} else /if (!${Me.Standing}) {
+
+			/stand
 		}
+		
 	}
 
 	/return
@@ -102,140 +210,24 @@ sub Check_Combat() {
 	/return 
 }
 
-sub Check_Med() {
+sub Check_Zone() {
 	
-	/if (${gl_ismedg}) {
-		
-		/if (${gl_dmgtmr}) {
+	/if (${gl_curzon.NotEqual[${Zone.Name}]}) {
 
-			/if (${Me.Sitting}) /stand
+		/varset gl_curzon ${Zone.Name}
 
-			/return
+		/if (${gl_iscstr}) {
+
+			/loadspells ${gl_splset}
 		}
 
-		/if (${Stick.Stopped} || !${Stick.Active}) {
+		/if (${Me.Class.Name.Equal["Bard"]}) {
 
-			/if (!${Me.Sitting} && !${Me.Moving}) {
-
-				/sit 
-			}
-
-		} else /if (!${Me.Standing}) {ww
-
-			/stand
-		}
-		
-	}
-
-	/return
-}
-
-sub Check_Follow() {
-	
-	/if (${gl_isfwlg} && !${gl_asstid}) {
-
-		/if (${Spawn[ID ${gl_fwlgid}].ID}) {
-
-			/if (${Spawn[ID ${gl_fwlgid}].Distance} > ${gl_comdis}) {
-				
-				/bc I'm too far away to follow.
-
-				/varset gl_isfwlg false
-				/varset gl_fwlgid 0
-
-				/stick off
-			
-			} else {
-
-				/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_fwlgid}) {
-
-					/stick ID ${gl_fwlgid} ${gl_foldis}
-				}
-			}
-
-		} else {
-
-			/bc My follow target has zoned.
-
-			/varset gl_isfwlg false
-			/varset gl_fwlgid 0
-
-			/stick off
+			/squelch /twist 1 2 3 4 5
 		}
 	}
 
 	/return
-}
-
-sub Check_Attack() {
-	
-	/if (${gl_asstid} != 0) {
-
-		/if (${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
-
-			/varset gl_asstid 0
-
-			/return
-		}
-
-		/tar ID ${gl_asstid}
-		/delay 1
-
-		/attack on
-
-		/if (${gl_shdsht}) {
-		
-			/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid})
-			{
-				/stick moveback ID ${gl_asstid} ${gl_rngdis}
-				/tar ID ${gl_asstid}
-				/delay 1
-			}
-			
-			/if (${Me.RangedReady})	/ranged
-		
-		} else {
-			
-			/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid}) {
-
-				/stick moveback ID ${gl_asstid} ${gl_assdis} ${gl_assdir}
-			}
-
-			/stick moveback ID ${gl_asstid} ${gl_assdis} ${gl_assdir}
-			/attack on
-
-			/declare abl 	string	local 
-			/declare i 		int 	local
-
-			/for i 1 to ${gl_nmabls}
-
-				/varset abl ${gl_cbtabs[${i}]}
-
-				/if (${Me.AbilityReady[${abl}]}) /doability ${abl}
-
-			/next i
-		}
-	}
-
-	/return 
-}
-
-sub Check_Pet_Attack() {
-	
-	/if (${Me.Pet.ID}) {
-		
-		/if (${gl_pettid} != ${gl_asstid}) {
-		
-			/if (${Me.Pet.Distance} < ${gl_lshdis}) {
-
-				/varset gl_pettid ${gl_asstid}
-				/tar ID ${gl_pettid}
-				/delay 1
-
-				/pet attack
-			}
-		}
-	}
 }
 
 sub Check_Group_Heal() {
@@ -433,6 +425,39 @@ sub Check_Constant_Buffs() {
 	/return	0
 }
 
+sub Check_Cannibalize() {
+
+	/if (${gl_asstid} != 0) {
+
+		/if (${gl_iscstr}) {
+
+			/if (${Me.PctMana} < 90 && ${Me.PctHPs} > 75) {
+				
+				/if (${Me.PctMana} < 60 && ${Me.AltAbilityReady["Cannibalization"]}) {
+
+					/aa act cannibalization
+
+					/delay 3s
+
+					/return 1
+
+				} else /if (${Me.SpellReady["Ancient: Chaotic Pain"]}) {
+
+					/call Cast "Ancient: Chaotic Pain" 9 ${Me.ID}
+
+					/return 1
+
+				} else /if (${FindItem["Manastone"].InvSlot}) {
+
+					/itemnotify ${FindItem["Manastone"].InvSlot} rightmouseup
+				}
+			}
+		}
+	}
+		
+	/return 0
+}
+
 sub Check_Pet_Summon() {
 
 	/if	(${Bool[${gl_petspl}]}) {
@@ -494,44 +519,19 @@ sub Check_Debuffs() {
 	/return 0
 }
 
-sub Check_Cannibalize() {
-
-	/if (${gl_asstid} != 0) {
-
-		/if (${gl_iscstr}) {
-
-			/if (${Me.PctMana} < 90 && ${Me.PctHPs} > 75) {
-				
-				/if (${Me.PctMana} < 60 && ${Me.AltAbilityReady["Cannibalization"]}) {
-
-					/aa act cannibalization
-
-					/delay 3s
-
-					/return 1
-
-				} else /if (${Me.SpellReady["Ancient: Chaotic Pain"]}) {
-
-					/call Cast "Ancient: Chaotic Pain" 9 ${Me.ID}
-
-					/return 1
-
-				} else /if (${FindItem["Manastone"].InvSlot}) {
-
-					/itemnotify ${FindItem["Manastone"].InvSlot} rightmouseup
-				}
-			}
-		}
-	}
-		
-	/return 0
-}
-
 sub Check_Nuke() {
 	
 	/if (!${gl_dmgtmr} && ${Bool[${gl_nukspl}]}) {
 
 		/if (${gl_asstid} != 0) {
+			
+			/if (${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
+
+				/varset gl_asstid 0
+				/attack off
+
+				/return 0
+			}
 			
 			/if (${Me.CurrentMana} < ${Spell[${gl_nukspl}].Mana}) /return 0
 

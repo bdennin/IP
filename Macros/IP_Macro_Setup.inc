@@ -7,6 +7,8 @@ sub Setup() {
 	/call "Check_Plugins"
 
 	/squelch /tgb on
+	/squelch /hidecorpse all
+	/squelch /hidecorpse none
 	/squelch /hidecorpse looted
 
 	/attack off
