@@ -45,7 +45,9 @@ sub Check_Actions() {
 sub Check_Attack() {
 	
 	/if (${gl_asstid}) {
-		
+
+		/if (${NetAdvPath.State} != 2) /squelch /netfollow pause
+
 		/if (!${Spawn[ID ${gl_asstid}].ID} || ${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
 
 			/varset gl_asstid 0
@@ -123,9 +125,16 @@ sub Check_Follow() {
 
 				/if (${Spawn[ID ${gl_fwlgid}].Distance} < ${gl_comdis}) {
 
-					/tar ID ${gl_fwlgid}
-					/delay 1
-					/squelch /netfollow on
+					/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_fwlgid}) {
+
+						/if (${NetAdvPath.State} != 1) {
+
+							/echo this is running
+							/tar ID ${gl_fwlgid}
+							/delay 1
+							/netfollow on
+						}
+					}
 					
 				} else {
 
@@ -134,8 +143,7 @@ sub Check_Follow() {
 					/varset gl_isfwlg false
 					/varset gl_fwlgid 0
 
-					/squelch /stick off
-					/squelch /netfollow off
+					/stick off
 				}
 
 			} else {
@@ -145,8 +153,7 @@ sub Check_Follow() {
 				/varset gl_isfwlg false
 				/varset gl_fwlgid 0
 
-				/squelch /stick off
-				/squelch /netfollow off
+				/stick off
 			}
 		}
 	}
