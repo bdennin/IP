@@ -10,6 +10,7 @@ sub Setup() {
 	/squelch /hidecorpse all
 	/squelch /hidecorpse none
 	/squelch /hidecorpse looted
+	/squelch /netfollow off
 
 	/attack off
 	/stick off

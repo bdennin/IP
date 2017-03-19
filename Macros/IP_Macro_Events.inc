@@ -253,6 +253,8 @@ sub Event_Rez(string line, int ID) {
 			}
 		}
 	}
+
+	/return
 }
 
 #event Speak "<#*#> speak #1# #2#"
