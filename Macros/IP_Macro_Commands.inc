@@ -1,7 +1,11 @@
 
 sub Cast(string name, string gem, int ID) {
 
-	/if (${Me.CurrentMana} < ${Spell[${name}].Mana} + 200) /return 0
+	/declare manpts int local
+
+	/varcalc manpts ${Spell[${name}].Mana} * 30 / 100 + ${Spell[${name}].Mana}
+
+	/if (${Me.CurrentMana} < ${manpts}) /return 0
 
 	/tar ID ${ID}
 

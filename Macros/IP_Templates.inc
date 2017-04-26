@@ -811,8 +811,8 @@ sub Init_Wizard() {
 	/ini ${gl_botini} "Heal_Over_Time" 	"Heal_Over_Time_Gem" 		""
 	/ini ${gl_botini} "Heal_Over_Time" 	"Heal_Over_Time_Percent"	""
 
-	/ini ${gl_botini} "Nuke" 			"Nuke_Spell" 				""
-	/ini ${gl_botini} "Nuke"		 	"Nuke_Gem" 					""
+	/ini ${gl_botini} "Nuke" 			"Nuke_Spell" 				"Blast of Cold"
+	/ini ${gl_botini} "Nuke"		 	"Nuke_Gem" 					"1"
 
 	/ini ${gl_botini} "Pet" 			"Pet_Spell" 				""
 	/ini ${gl_botini} "Pet"		 		"Pet_Gem" 					""

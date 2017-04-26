@@ -9,6 +9,8 @@ sub Check_Actions() {
 	/call "Check_Combat"
 	/call "Check_Zone"
 
+	/if (${Me.Moving}) /return
+
 	/call "Check_Group_Heal"
 	/if (${Macro.Return}) /return
 
@@ -44,39 +46,11 @@ sub Check_Actions() {
 
 sub Check_Attack() {
 	
-	/if (${gl_asstid} != 0) {
+	/if (${Me.Name.Equal[${gl_asstpc}]}) {
 
-		/if (${NetAdvPath.Active}) /squelch /netfollow off
+		/if (${Target.ID} && ${Target.Distance} < ${gl_lshdis}) {
 
-		/if (!${Spawn[ID ${gl_asstid}].ID} || ${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
-
-			/varset gl_asstid 0
-			/attack off
-
-			/return
-		}
-
-		/if (${gl_ismele}) {
-
-			/tar ID ${gl_asstid}
-			/delay 1
-
-			/if (${gl_shdsht}) {
-			
-				/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid})
-				{
-					/stick ID ${gl_asstid} moveback ${gl_rngdis}
-				}
-				
-				/if (${Me.RangedReady})	/ranged
-			
-			} else {
-				
-				/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid}) {
-
-					/stick ID ${gl_asstid} moveback ${gl_assdis} ${gl_assdir}
-					/attack on
-				}
+			/if (${NetBots[${gl_asstpc}].Attacking}) {
 
 				/declare abl 	string	local 
 				/declare i 		int 	local
@@ -90,8 +64,59 @@ sub Check_Attack() {
 				/next i
 			}
 		}
- 	}
 
+	} else {
+
+		/if (${gl_asstid} != 0) {
+
+			/if (!${Spawn[ID ${gl_asstid}].ID} || ${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
+
+				/varset gl_asstpc 0
+				/varset gl_asstid 0
+				/stick off
+				/attack off
+
+				/return
+			}
+
+			/if (${gl_ismele}) {
+
+				/tar ID ${gl_asstid}
+				/delay 1
+
+				/if (${gl_shdsht}) {
+			
+					/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid}) {
+
+						/stick ID ${gl_asstid} moveback ${gl_rngdis}	
+					}
+				
+					/if (${Me.RangedReady})	/ranged
+			
+				} else {
+
+					/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid}) {
+
+						/stick ID ${gl_asstid} moveback ${gl_assdis} ${gl_assdir}
+						/attack on
+					}
+
+					/declare abl 	string	local 
+					/declare i 		int 	local
+
+					/for i 1 to ${gl_nmabls}
+
+						/varset abl ${gl_cbtabs[${i}]}
+
+						/if (${Me.AbilityReady[${abl}]}) /doability ${abl}
+
+					/next i
+				}
+			}
+	 	}
+
+	}
+	
 	/return
 }
 
@@ -125,12 +150,9 @@ sub Check_Follow() {
 
 				/if (${Spawn[ID ${gl_fwlgid}].Distance} < ${gl_comdis}) {
 
-					/if (${NetAdvPath.State} != 1) {
+					/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_fwlgid}) {
 
-						/tar ID ${gl_fwlgid}
-						/delay 1
-						/squelch /netfollow clear
-						/squelch /netfollow on
+						/stick ID ${gl_fwlgid} ${gl_foldis}
 					}
 					
 				} else {
@@ -149,6 +171,7 @@ sub Check_Follow() {
 
 				/varset gl_isfwlg false
 				/varset gl_fwlgid 0
+
 
 				/stick off
 			}
@@ -192,7 +215,7 @@ sub Check_Med() {
 sub Check_Combat() {
 
 	/declare cncbts 	string 	local 	${NetBots.Client}
-	/declare netbot 	string 	local 	"0"
+	/declare netbot 	string 	local 	0
 	/declare i 			int 	local
 
 	/for i 1 to ${NetBots.Counts} 
@@ -221,6 +244,8 @@ sub Check_Zone() {
 	/if (${gl_curzon.NotEqual[${Zone.Name}]}) {
 
 		/varset gl_curzon ${Zone.Name}
+		/varset gl_asstid 0
+		/varset gl_incmbt false
 
 		/if (${gl_iscstr}) {
 
@@ -229,7 +254,7 @@ sub Check_Zone() {
 
 		/if (${Me.Class.Name.Equal["Bard"]}) {
 
-			/squelch /twist 1 2 3 4 5
+			/squelch /twist 2 3 4 5 6
 		}
 	}
 
@@ -243,7 +268,7 @@ sub Check_Group_Heal() {
 		/if (${Me.CurrentMana} < ${Spell[${gl_ghlspl}].Mana} + 100) /return 0
 
 		/declare cncbts 	string 	local 	${NetBots.Client}
-		/declare netbot 	string 	local 	"0"
+		/declare netbot 	string 	local 	0
 		/declare helcnt 	int 	local	0
 		/declare i 			int 	local
 
@@ -282,7 +307,7 @@ sub Check_Complete_Heal() {
 		/if (${Me.CurrentMana} < ${Spell[${gl_chlspl}].Mana} + 100) /return 0
 
 		/declare cncbts 	string 	local 	${NetBots.Client}
-		/declare netbot 	string 	local 	"0"
+		/declare netbot 	string 	local 	0
 		/declare lwstpc 	int 	local 	100	
 		/declare hltgid 	int 	local 	
 		/declare i 			int 	local
@@ -323,7 +348,7 @@ sub Check_Target_Heal() {
 		/if (${Me.CurrentMana} < ${Spell[${gl_thlspl}].Mana} + 100) /return 0
 
 		/declare cncbts 	string 	local 	${NetBots.Client}
-		/declare netbot 	string 	local 	"0"
+		/declare netbot 	string 	local 	0
 		/declare lwstpc 	int 	local 	100	
 		/declare hltgid 	int 	local 	
 		/declare i 			int 	local
@@ -362,7 +387,7 @@ sub Check_HoT() {
 
 		/declare cncbts 	string 	local 	${NetBots.Client}
 		/declare hotsid 	string 	local 	${Spell[${gl_hotspl}].ID}
-		/declare netbot 	string 	local 	"0"
+		/declare netbot 	string 	local 	0
 		/declare lwstpc 	int 	local 	100	
 		/declare hltgid 	int 	local 	
 		/declare i 			int 	local

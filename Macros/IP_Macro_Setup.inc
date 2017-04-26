@@ -24,7 +24,9 @@ sub Setup_Global() {
 	||Internal variables
 	/declare gl_setini 	string 	outer 	"Settings\Settings.ini"
 	/declare gl_botini 	string 	outer 	"Bots\${MacroQuest.Server}_${Me.Name}.ini"	
-	/declare gl_curzon	string 	outer 	"0"
+	/declare gl_curzon	string 	outer 	0
+	/declare gl_asstpc 	string 	outer 	0
+	/declare gl_assnam 	string 	outer 	0
 
 	/declare gl_dmgtmr	timer  	outer	0s
 	
@@ -33,7 +35,6 @@ sub Setup_Global() {
 	/declare gl_pettid 	int 	outer 	0	
 
 	/declare gl_incmbt	bool 	outer	false
-	/declare gl_isatkg 	bool 	outer 	false
 	/declare gl_isfwlg	bool 	outer	false
 	/declare gl_ismedg	bool 	outer	false
 

@@ -129,7 +129,7 @@ sub Check_Auto_Buffs() {
 sub Check_Auto_Med() {
 
 	/declare cnctdb 	string 	local 	${NetBots.Client}
-	/declare netbot 	string 	local 	"0"
+	/declare netbot 	string 	local 	0
 	/declare manpct		int 	local 	0
 	/declare i 			int 	local 	0
 

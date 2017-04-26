@@ -7,6 +7,7 @@ sub Check_Events() {
 	/doevents Assist
 	/doevents Buff
 	/doevents Character_Flag
+	/doevents Click
 	/doevents Disband
 	/doevents End_Enrage
 	/doevents End_Macro
@@ -53,14 +54,13 @@ sub Event_Accept_Raid(string line) {
 #event Assist "<#1#> assist on #2#"
 sub Event_Assist(string line, string sender, int ID) {
 
-	/if (${Spawn[${sender}].ID} == ${Me.ID}) /return
-
 	/if (${Spawn[PC ${sender}].ID} && ${Spawn[${sender}].Distance} < ${gl_comdis}) {
 
 		/if (${Spawn[ID ${ID}].ID} && ${Spawn[ID ${ID}].Distance} < ${gl_comdis}) {
 
 			/if (${Spawn[ID ${ID}].Type.NotEqual["NPC"]}) /return
 
+			/varset gl_asstpc ${sender}
 			/varset gl_asstid ${ID}
 			/varset gl_incmbt true
 		}
@@ -112,6 +112,14 @@ sub Event_Character_Flag(string line) {
 	/return
 }
 
+#event Click "#*# click"
+sub Event_Click(string line) {
+	
+	/echo clicking
+
+	/return
+}
+
 #event Disband "#*# disband"
 sub Event_Disband(string line) {
 
@@ -153,10 +161,12 @@ sub Event_Follow(string line, int ID) {
 
 		/varset gl_incmbt false
 		/varset gl_asstid 0
-	
+
 		/interrupt
 
 		/attack off
+
+		/stick ID ${gl_fwlgid} ${gl_foldis}
 	}
 
 	/return
@@ -179,15 +189,17 @@ sub Event_Gate(string line) {
 	/delay 2
 
 	/itemnotify 0 rightmouseup
-
-	/delay 4s
-
+	/delay 11s
+	
 	/return
 } 
 
 #event Loot "<#*#> loot"
 sub Event_Loot(string line) {
 	
+	/declare i 		int local
+	/declare numitm int local	
+
 	:LootCorpse 
 
 	/if (${SpawnCount[Corpse ${Me.Name}]} > 0) {
@@ -196,12 +208,26 @@ sub Event_Loot(string line) {
 
 			/tar ID ${NearestSpawn[Corpse ${Me.Name}].ID}
 
-			/delay 1
+			/delay 2
 
 			/corpse
 
 			/loot
 
+			/delay 5
+
+			/echo ${Corpse.Items}
+			/varset numitm ${Corpse.Items}
+
+			/for i 1 to ${numitm}
+
+				/itemnotify loot${i} rightmouseup
+				/delay 5
+
+			/next i
+
+			/echo done looting hehe
+			
 			/keypress esc
 
 			/delay 1s
@@ -246,9 +272,16 @@ sub Event_Rez(string line, int ID) {
 
 			/if (${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
 
+				/tar ID ${ID}
+				/delay 2
+
 				/if (${Bool[FindItem["Water Sprinkler of Nem Ankh"]]}) {
 
-					/itemnotify 
+					/itemnotify ${FindItem["Water Sprinkler of Nem Ankh"].InvSlot} rightmouseup
+				
+				} else {
+
+					/cast reviviscence
 				}
 			}
 		}
@@ -297,11 +330,7 @@ sub Event_Stop(string line, string sender) {
 	/varset gl_isfwlg false
 	/varset gl_fwlgid 0
 	
-	/if (${Me.Name.NotEqual[${sender}]}) {
-		
-		/squelch /stick off
-		/squelch /netfollow off
-	}		
+	/squelch /stick off
 	
 	/return 
 }
@@ -336,6 +365,8 @@ sub Event_Warp(string line, string sender, int ID) {
 		/if (${Spawn[ID ${ID}].ID}) {
 
 			:WarpLoop
+
+
 
 			/if (${Spawn[ID ${ID}].Distance} > ${gl_wrpdis}) {
 

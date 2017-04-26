@@ -1,5 +1,5 @@
 
-#turbo 20
+#turbo 10
 
 #include IP_Macro_Actions.inc
 #include IP_Macro_Auto.inc
