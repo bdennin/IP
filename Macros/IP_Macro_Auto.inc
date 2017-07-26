@@ -62,50 +62,51 @@ sub Check_Auto_Nearby() {
 
 	/declare nrstid int local ${NearestSpawn["NPC"].ID}
 
-	/if (${Spawn[ID ${nrstid}].Distance3D} < ${agrdis} && ${Spawn[ID ${nrstid}].LineOfSight}) {
-		
-		/if (${nrstid} != ${gl_asstid}) {
-
-			/echo Auto :: Found target nearby.
-
-			/varset gl_asstid ${nrstid}
-			/varset gl_incmbt true
-
-			/bc assist on ${gl_asstid}
-
-			/tar ID ${gl_asstid}
-			/delay 1
-			/stick ID ${gl_asstid} ${gl_assdis}
-			/attack on
-
-			/delay 1s
-
-			/return 1
-
-		}  /if (${gl_asstid} != 0) {
-
-			/if (${Target.ID} != ${gl_asstid}) {
-
-				/echo Auto :: Target was first to attack me.
+	/if (${Spawn[ID ${nrstid}].Distance3D} < ${agrdis}) {
+			
+		/if (${Spawn[ID ${nrstid}].LineOfSight}) {
 				
-				/varset gl_asstid ${Target.ID}
+			/if (${nrstid} != ${gl_asstid}) {
+
+				/echo Auto :: Found target nearby.
+
+				/varset gl_asstid ${nrstid}
 				/varset gl_incmbt true
 
-				/bc assist on ${Target.ID}
-			}
+				/bc assist on ${gl_asstid}
 
-			/tar ID ${gl_asstid}
-			/delay 1
-			/stick ID ${gl_asstid} ${gl_assdis}
-			/attack on
+				/tar ID ${gl_asstid}
+				/delay 1
+				/stick ID ${gl_asstid} ${gl_assdis}
+				/attack on
 
-			/delay 1s
+				/delay 1s
 
-			/return 1
+				/return 1
+
+			}  /if (${gl_asstid} != 0) {
+
+				/if (${Target.ID} != ${gl_asstid}) {
+
+					/echo Auto :: Target was first to attack me.
+					
+					/varset gl_asstid ${Target.ID}
+					/varset gl_incmbt true
+
+					/bc assist on ${Target.ID}
+				}
+
+				/tar ID ${gl_asstid}
+				/delay 1
+				/stick ID ${gl_asstid} ${gl_assdis}
+				/attack on
+
+				/delay 1s
+
+				/return 1
+			}	
 		}
 	}
-
-	/echo
 
 	/return 0
 }
@@ -174,21 +175,19 @@ sub Check_Auto_Med() {
 sub Check_Auto_Target() {
 			
 	/declare 	id	int 	local 0
-	/declare  	cnt	int 	local 2
+	/declare  	cnt	int 	local 1
 	/declare 	dis	float 	local 0.0
 
 	:AcquireTarget
 
 	/if (${NearestSpawn["NPC"].Distance3D} > ${gl_agrdis}) {
 	
-		/echo ${cnt}
-
 		/varset id 	${NearestSpawn[${cnt},"NPC"].ID}
 
 		/tar ID ${id}
 		/delay 1
 
-		/if (${Target.DistanceZ} > 20.0) {
+		/if (${Target.DistanceZ} > 30.0) {
 
 			/echo Auto :: Target is on another plane.  Switching targets.
 
@@ -197,6 +196,16 @@ sub Check_Auto_Target() {
 			/goto :AcquireTarget
 		}
 
+		/if (${Target.Level} >= ${Me.Level}) {
+
+			/echo Auto :: Target is too high level.  Switching targets.
+
+			/varcalc cnt ${cnt} + 1
+
+			/goto :AcquireTarget
+		}
+
+
 		/echo Auto :: Target ${id} valid; Attempting to connect...
 
 		/varset dis ${Target.Distance3D}
@@ -204,8 +213,6 @@ sub Check_Auto_Target() {
 		/stick ID ${id} ${gl_assdis}		
 
 		/delay 5
-
-		/echo TD : ${Target.Distance} : Saved Dis : ${dis}
 
 		/if (${Target.Distance3D} >= ${dis})  {
 

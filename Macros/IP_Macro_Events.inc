@@ -214,25 +214,37 @@ sub Event_Loot(string line) {
 
 			/loot
 
-			/delay 5
+			/delay 20
 
-			/echo ${Corpse.Items}
+			:LootItems
 			/varset numitm ${Corpse.Items}
 
-			/for i 1 to ${numitm}
+			/echo ${numitm}
+
+			/for i 1 to ${numitm} 
+
+				/echo i : ${i}
 
 				/itemnotify loot${i} rightmouseup
-				/delay 5
+				/itemnotify loot${i} rightmouseup
+				/itemnotify loot${i} rightmouseup
+
+				/delay 2
+
+				/itemnotify loot${i} rightmouseup
+				/itemnotify loot${i} rightmouseup
+				/itemnotify loot${i} rightmouseup
+
+				/delay 3
 
 			/next i
 
-			/echo done looting hehe
-			
+			/if (${Corpse.Items} > 0) {
+
+				/goto :LootItems
+			}					
+
 			/keypress esc
-
-			/delay 1s
-
-			/goto :LootCorpse
 		}
 	}
 	
@@ -270,12 +282,19 @@ sub Event_Rez(string line, int ID) {
 
 		/if (${Spawn[ID ${ID}].Distance} < ${gl_spldis}) {
 
-			/if (${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
+			/if (${Spawn[ID ${ID}].Type.Equal["Corpse"]}) {
+				
+				/interrupt
 
 				/tar ID ${ID}
 				/delay 2
 
-				/if (${Bool[FindItem["Water Sprinkler of Nem Ankh"]]}) {
+				/if (${Bool[FindItem["Holy Symbol of the Prime Healer"]]}) {
+
+					/itemnotify ${FindItem["Holy Symbol of the Prime Healer"].InvSlot} rightmouseup
+					/echo I'm clickin it
+				
+				} else /if (${Bool[FindItem["Water Sprinkler of Nem Ankh"]]}) {
 
 					/itemnotify ${FindItem["Water Sprinkler of Nem Ankh"].InvSlot} rightmouseup
 				
@@ -366,9 +385,7 @@ sub Event_Warp(string line, string sender, int ID) {
 
 			:WarpLoop
 
-
-
-			/if (${Spawn[ID ${ID}].Distance} > ${gl_wrpdis}) {
+			/if (${Spawn[ID ${ID}].Distance3D} > ${gl_wrpdis}) {
 
 				/interrupt
 

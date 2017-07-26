@@ -41,6 +41,9 @@ sub Check_Actions() {
 	/call "Check_Nuke"
 	/if (${Macro.Return}) /return	
 	
+	/call "Check_Yes"
+	/if (${Macro.Return}) /return	
+
 	/return
 }
 
@@ -65,56 +68,56 @@ sub Check_Attack() {
 			}
 		}
 
-	} else {
+	} else /if (${gl_asstid} != 0) { 
 
-		/if (${gl_asstid} != 0) {
+		/if (!${Spawn[ID ${gl_asstid}].ID} || ${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
 
-			/if (!${Spawn[ID ${gl_asstid}].ID} || ${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
+			/varset gl_asstpc 0
+			/varset gl_asstid 0
+			/stick off
+			/attack off
 
-				/varset gl_asstpc 0
-				/varset gl_asstid 0
-				/stick off
-				/attack off
+			/return
+		}
 
-				/return
-			}
+		/if (${gl_ismele}) {
 
-			/if (${gl_ismele}) {
+			/tar ID ${gl_asstid}
+			/delay 1
 
-				/tar ID ${gl_asstid}
-				/delay 1
+			/if (${gl_shdsht}) {
+		
+				/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid}) {
 
-				/if (${gl_shdsht}) {
-			
-					/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid}) {
-
-						/stick ID ${gl_asstid} moveback ${gl_rngdis}	
-					}
-				
-					/if (${Me.RangedReady})	/ranged
-			
-				} else {
-
-					/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid}) {
-
-						/stick ID ${gl_asstid} moveback ${gl_assdis} ${gl_assdir}
-						/attack on
-					}
-
-					/declare abl 	string	local 
-					/declare i 		int 	local
-
-					/for i 1 to ${gl_nmabls}
-
-						/varset abl ${gl_cbtabs[${i}]}
-
-						/if (${Me.AbilityReady[${abl}]}) /doability ${abl}
-
-					/next i
+					/stick ID ${gl_asstid} moveback ${gl_rngdis}	
 				}
-			}
-	 	}
+			
+				/if (${Me.RangedReady})	/ranged
+		
+			} else {
 
+				/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_asstid}) {
+
+					/stick ID ${gl_asstid} moveback ${gl_assdis} ${gl_assdir}
+					/attack on
+				}
+
+				/declare abl 	string	local 
+				/declare i 		int 	local
+
+				/for i 1 to ${gl_nmabls}
+
+					/varset abl ${gl_cbtabs[${i}]}
+
+					/if (${Me.AbilityReady[${abl}]}) /doability ${abl}
+
+				/next i
+			}
+		
+		} else {
+
+			/stick off
+		}
 	}
 	
 	/return
@@ -127,6 +130,8 @@ sub Check_Pet_Attack() {
 		/if (${gl_pettid} != ${gl_asstid}) {
 		
 			/if (${Me.Pet.Distance} < ${gl_lshdis}) {
+
+				/pet back off
 
 				/varset gl_pettid ${gl_asstid}
 				/tar ID ${gl_pettid}
@@ -150,9 +155,22 @@ sub Check_Follow() {
 
 				/if (${Spawn[ID ${gl_fwlgid}].Distance} < ${gl_comdis}) {
 
-					/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_fwlgid}) {
+					/if (${Spawn[ID ${gl_fwlgid}].LineOfSight}) {
+						
+						/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_fwlgid}) {
 
-						/stick ID ${gl_fwlgid} ${gl_foldis}
+							/stick ID ${gl_fwlgid} ${gl_foldis}
+						}
+
+					} else {
+
+						/bc I lost sight of my follow target.
+
+						/varset gl_isfwlg false
+						/varset gl_fwlgid 0
+
+
+						/stick off
 					}
 					
 				} else {
@@ -304,8 +322,6 @@ sub Check_Complete_Heal() {
 
 	/if (${Bool[${gl_chlspl}]}) {
 
-		/if (${Me.CurrentMana} < ${Spell[${gl_chlspl}].Mana} + 100) /return 0
-
 		/declare cncbts 	string 	local 	${NetBots.Client}
 		/declare netbot 	string 	local 	0
 		/declare lwstpc 	int 	local 	100	
@@ -345,16 +361,14 @@ sub Check_Target_Heal() {
 
 	/if (${Bool[${gl_thlspl}]}) {
 
-		/if (${Me.CurrentMana} < ${Spell[${gl_thlspl}].Mana} + 100) /return 0
-
 		/declare cncbts 	string 	local 	${NetBots.Client}
 		/declare netbot 	string 	local 	0
 		/declare lwstpc 	int 	local 	100	
 		/declare hltgid 	int 	local 	
 		/declare i 			int 	local
 
-		/for i 1 to ${NetBots.Counts} 
-			
+		/for i 1 to ${NetBots.Counts} 		
+
 			/varset netbot ${cncbts.Arg[${i}]}
 
 			/if (${Spawn[PC ${netbot}].ID} && ${Spawn[PC ${netbot}].Distance} < ${gl_spldis}) {
@@ -382,8 +396,6 @@ sub Check_Target_Heal() {
 sub Check_HoT() {
 
 	/if (${Bool[${gl_hotspl}]}) {
-
-		/if (${Me.CurrentMana} < ${Spell[${gl_hotspl}].Mana} + 100) /return 0
 
 		/declare cncbts 	string 	local 	${NetBots.Client}
 		/declare hotsid 	string 	local 	${Spell[${gl_hotspl}].ID}
@@ -437,8 +449,6 @@ sub Check_Constant_Buffs() {
 			/varset bufgem ${gl_cstbfs[${i},2]}
 			/varset buftgt ${gl_cstbfs[${i},3]}
 			/varset buffid ${Spell[${bufspl}].ID}
-
-			/if (${Me.CurrentMana} < ${Spell[${bufspl}].Mana} + 100) /return 0
 
 			/if (${Spawn[PC ${buftgt}].ID} && ${Spawn[PC ${buftgt}].Distance} < ${gl_spldis}) {
 
@@ -495,8 +505,6 @@ sub Check_Pet_Summon() {
 		
 		/if (!${Me.Pet.ID}) {
 
-			/if (${Me.CurrentMana} < ${Spell[${gl_petspl}].Mana} + 100) /return 0
-
 			/call Cast ${gl_petspl} ${gl_petgem} ${Me.ID}
 
 			/varset gl_pettid 0
@@ -527,8 +535,6 @@ sub Check_Pet_Buffs() {
 			/varset buftgt ${gl_cstbfs[${i},3]}
 			/varset buffid ${Spell[${bufspl}].ID}
 	
-			/if (${Me.CurrentMana} < ${Spell[${bufspl}].Mana} + 100) /return 0
-
 			/if (${Me.Pet.ID} && ${Me.Pet.Distance} < ${gl_spldis}) {
 			
 				/if (!${NetBots[${Me.Name}].PetBuff.Find[${buffid}]}) {
@@ -564,8 +570,6 @@ sub Check_Nuke() {
 				/return 0
 			}
 			
-			/if (${Me.CurrentMana} < ${Spell[${gl_nukspl}].Mana}) /return 0
-
 			/if (${Me.SpellReady[${gl_nukspl}]}) {
 
 				/call Cast ${gl_nukspl} ${gl_nukgem} ${gl_asstid}
@@ -573,6 +577,16 @@ sub Check_Nuke() {
 				/return 1
 			}
 		}
+	}
+
+	/return 0
+}
+
+sub Check_Yes() {
+
+	/if (${Window[ConfirmationDialogBox].Open}) {
+
+		/notify ConfirmationDialogBox CD_Yes_Button leftmouseup
 	}
 
 	/return 0
