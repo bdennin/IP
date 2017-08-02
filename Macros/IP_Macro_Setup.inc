@@ -1,7 +1,7 @@
 
 sub Setup() {
 
-	/call "Setup_Global"
+	/call "Setup_Vars"
 	/call "Setup_Class"	
 	
 	/call "Check_Plugins"
@@ -19,7 +19,15 @@ sub Setup() {
 	/return
 }
 
-sub Setup_Global() {
+sub Setup_Vars() {
+
+	/if (!${Defined[gl_fwlgid]}) /declare gl_fwlgid	int 	global	0
+	/if (!${Defined[gl_asstid]}) /declare gl_asstid	int 	global	0
+	/if (!${Defined[gl_pettid]}) /declare gl_pettid	int 	global	0
+	/if (!${Defined[gl_incmbt]}) /declare gl_incmbt	bool 	global	0
+	/if (!${Defined[gl_isfwlg]}) /declare gl_isfwlg	bool 	global	0
+	/if (!${Defined[gl_ismedg]}) /declare gl_ismedg	bool 	global	0
+	
 
 	||Internal variables
 	/declare gl_setini 	string 	outer 	"Settings\Settings.ini"
@@ -29,20 +37,15 @@ sub Setup_Global() {
 	/declare gl_assnam 	string 	outer 	0
 
 	/declare gl_dmgtmr	timer  	outer	0s
-	
-	/declare gl_fwlgid	int 	outer	0
-	/declare gl_asstid	int 	outer	0
-	/declare gl_pettid 	int 	outer 	0	
-
-	/declare gl_incmbt	bool 	outer	false
-	/declare gl_isfwlg	bool 	outer	false
-	/declare gl_ismedg	bool 	outer	false
+	/declare gl_zontmr	timer  	outer	0s
 
 	||Ini globals
+	/declare gl_rezflg 	bool 	outer
+
 	/declare gl_engpct 	int 	outer
 
 	/declare gl_splset	string	outer
-	
+
 	/declare gl_comdis	float 	outer
 	/declare gl_rngdis 	float 	outer
 	/declare gl_spldis	float	outer

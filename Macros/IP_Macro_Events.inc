@@ -19,6 +19,7 @@ sub Check_Events() {
 	/doevents Speak
 	/doevents Start_Enrage
 	/doevents Stop
+	/doevents Summon_Pet
 	/doevents Take_Damage
 	/doevents Warp
 
@@ -115,7 +116,18 @@ sub Event_Character_Flag(string line) {
 #event Click "#*# click"
 sub Event_Click(string line) {
 	
-	/echo clicking
+	/declare i 		int local
+	/declare x 		int local
+	/declare y 		int local
+
+	/for i 1 to 100 
+
+		/varcalc x ${Math.Rand[3840]} + 1
+		/varcalc y ${Math.Rand[2160]} + 1
+
+		/click left ${x} ${y}
+
+	/next i 
 
 	/return
 }
@@ -196,55 +208,64 @@ sub Event_Gate(string line) {
 
 #event Loot "<#*#> loot"
 sub Event_Loot(string line) {
-	
-	/declare i 		int local
-	/declare numitm int local	
-
-	:LootCorpse 
 
 	/if (${SpawnCount[Corpse ${Me.Name}]} > 0) {
 			
 		/if (${NearestSpawn[Corpse ${Me.Name}].Distance} < ${gl_spldis}) {
 
+
+			| LW_LootAllButton
+			/declare i 		int local
+			/declare numitm int local	
+			/declare count 	int local
+
+			:LootCorpse
+
 			/tar ID ${NearestSpawn[Corpse ${Me.Name}].ID}
 
-			/delay 2
+			/delay 5
 
 			/corpse
 
 			/loot
 
-			/delay 20
+			/delay 10
 
-			:LootItems
 			/varset numitm ${Corpse.Items}
-
-			/echo ${numitm}
 
 			/for i 1 to ${numitm} 
 
-				/echo i : ${i}
+				:LootItem
+
+				/if (!${Corpse.Open}) /goto :LootCorpse
+
+				/varset count 0
 
 				/itemnotify loot${i} rightmouseup
-				/itemnotify loot${i} rightmouseup
-				/itemnotify loot${i} rightmouseup
+				
+				/delay 1
 
-				/delay 2
+				/if (!${Corpse.Item[${i}].ID}) {
 
-				/itemnotify loot${i} rightmouseup
-				/itemnotify loot${i} rightmouseup
-				/itemnotify loot${i} rightmouseup
+					/varcalc count ${count} + 1
 
-				/delay 3
+					/if (${count} >= 3) /goto :ItemLooted
+
+				
+				} else {
+
+					/goto :LootItem
+				}
+
+				/delay 1
+
+				:ItemLooted
 
 			/next i
 
-			/if (${Corpse.Items} > 0) {
+			/notify LootWnd DoneButton leftmouseup
 
-				/goto :LootItems
-			}					
-
-			/keypress esc
+			/varset gl_rezflg 0
 		}
 	}
 	
@@ -284,19 +305,19 @@ sub Event_Rez(string line, int ID) {
 
 			/if (${Spawn[ID ${ID}].Type.Equal["Corpse"]}) {
 				
-				/interrupt
-
 				/tar ID ${ID}
 				/delay 2
+				/interrupt
 
 				/if (${Bool[FindItem["Holy Symbol of the Prime Healer"]]}) {
 
 					/itemnotify ${FindItem["Holy Symbol of the Prime Healer"].InvSlot} rightmouseup
-					/echo I'm clickin it
+					/delay 70
 				
 				} else /if (${Bool[FindItem["Water Sprinkler of Nem Ankh"]]}) {
 
 					/itemnotify ${FindItem["Water Sprinkler of Nem Ankh"].InvSlot} rightmouseup
+					/delay 40
 				
 				} else {
 
@@ -352,6 +373,31 @@ sub Event_Stop(string line, string sender) {
 	/squelch /stick off
 	
 	/return 
+}
+
+#event Summon_Pet "#*# pet"
+sub Event_Summon_Pet(string line) {
+
+	/interrupt 
+
+	/if (${Me.Class.Name.Equal["Bard"]}) /twist off
+
+	/delay 2
+
+	/if (${FindItem["Evolved Red Dragon Egg"].InvSlot}) {
+
+		/itemnotify ${FindItem["Evolved Red Dragon Egg"].InvSlot} rightmouseup	
+	
+	} else /if (${FindItem["Red Dragon Egg"].InvSlot}) {
+
+		/itemnotify ${FindItem["Red Dragon Egg"].InvSlot} rightmouseup	
+	}
+	
+	/delay 16s
+
+	/if (${Me.Class.Name.Equal["Bard"]}) /twist 2 3 4 5 6
+
+	/return
 }
 
 #event Take_Damage "#1# YOU for #*# points of damage."

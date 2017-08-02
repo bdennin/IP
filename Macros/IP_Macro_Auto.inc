@@ -1,15 +1,18 @@
 
 sub Setup_Auto() {
 	
+	/declare unrtgs[2000] bool outer false
+
 	/declare pckldr string 	outer "Hrelgar"
 
 	/declare buftmr	timer 	outer 30m
 	/declare sumtmr timer 	outer 0
 	/declare baktmr timer 	outer 0
 	/declare rndtmr timer 	outer 0
+	/declare rsttmr timer 	outer 1m
 	
 	/declare lstdis float 	outer 0.0
-	/declare agrdis float 	outer 35.0
+	/declare agrdis float 	outer 20.0
 
 	/declare begmed int 	outer 20
 	/declare endmed int 	outer 90
@@ -44,6 +47,15 @@ sub Check_Auto_Actions() {
 	
 	/if (${Me.Name.NotEqual[${pckldr}]}) /return
 
+	/if (!${rsttmr}) {
+
+		/varset rsttmr 10m
+		/deletevar unrtgs
+		/declare unrtgs[2000] bool outer false
+
+		/echo Reseting unreachable targets
+	}
+
 	/call "Check_Auto_Nearby" 
 	/if (${Macro.Return}) /return
 
@@ -65,10 +77,10 @@ sub Check_Auto_Nearby() {
 	/if (${Spawn[ID ${nrstid}].Distance3D} < ${agrdis}) {
 			
 		/if (${Spawn[ID ${nrstid}].LineOfSight}) {
-				
-			/if (${nrstid} != ${gl_asstid}) {
+			
+			/if (${nrstid} < 2000 && ${unrtgs[${nrstid}]}) /return 0
 
-				/echo Auto :: Found target nearby.
+			/if (${nrstid} != ${gl_asstid}) {
 
 				/varset gl_asstid ${nrstid}
 				/varset gl_incmbt true
@@ -84,11 +96,9 @@ sub Check_Auto_Nearby() {
 
 				/return 1
 
-			}  /if (${gl_asstid} != 0) {
+			}  else /if (${gl_asstid} != 0) {
 
 				/if (${Target.ID} != ${gl_asstid}) {
-
-					/echo Auto :: Target was first to attack me.
 					
 					/varset gl_asstid ${Target.ID}
 					/varset gl_incmbt true
@@ -141,7 +151,7 @@ sub Check_Auto_Med() {
 			/varset netbot ${cnctdb.Arg[${i}]}
 			/varset manpct ${NetBots[${netbot}].PctMana}
 
-			/if (${manpct} != 0 && ${manpct} < ${endmed}) {
+			/if (${NetBots[${netbot}].Class.NotEqual["Bard"]} && ${manpct} != 0 && ${manpct} < ${endmed}) {
 
 				/return 1
 			}
@@ -180,48 +190,59 @@ sub Check_Auto_Target() {
 
 	:AcquireTarget
 
-	/if (${NearestSpawn["NPC"].Distance3D} > ${gl_agrdis}) {
+	/if (${NearestSpawn["NPC"].Distance3D} < ${gl_agrdis}) {
 	
-		/varset id 	${NearestSpawn[${cnt},"NPC"].ID}
+		/return
+	}
 
-		/tar ID ${id}
-		/delay 1
+	/varset id 	${NearestSpawn[${cnt},"NPC"].ID}
 
-		/if (${Target.DistanceZ} > 30.0) {
+	/tar ID ${id}
+	/delay 1
 
-			/echo Auto :: Target is on another plane.  Switching targets.
+	/if (${id} < 2000 && ${unrtgs[${id}]}) {
+		
+		/echo Auto :: Target is branded as unreachable.  Switching targets.
 
-			/varcalc cnt ${cnt} + 1
+		/varcalc cnt ${cnt} + 1
 
-			/goto :AcquireTarget
-		}
+		/goto :AcquireTarget
+	}
 
-		/if (${Target.Level} >= ${Me.Level}) {
+	/if (${Target.DistanceZ} > 50.0) {
 
-			/echo Auto :: Target is too high level.  Switching targets.
+		/echo Auto :: Target is on another plane.  Switching targets.
 
-			/varcalc cnt ${cnt} + 1
+		/varcalc cnt ${cnt} + 1
 
-			/goto :AcquireTarget
-		}
+		/goto :AcquireTarget
+	}
+
+	/if (${Target.ConColor.NotEqual["LIGHT BLUE"]} && ${Target.ConColor.NotEqual["BLUE"]}) {
+
+		/echo Auto :: Target is too high level.  Switching targets.
+
+		/varcalc cnt ${cnt} + 1
+
+		/goto :AcquireTarget
+	}
 
 
-		/echo Auto :: Target ${id} valid; Attempting to connect...
+	/varset dis ${Target.Distance3D}
 
-		/varset dis ${Target.Distance3D}
+	/moveto ID ${id}
 
-		/stick ID ${id} ${gl_assdis}		
+	/delay 5
 
-		/delay 5
+	/if (${Target.Distance3D} >= ${dis})  {
 
-		/if (${Target.Distance3D} >= ${dis})  {
+		/echo Auto :: Trouble getting to target.  Switching targets.
 
-			/echo Auto :: Trouble getting to target.  Switching targets.
+		/varset unrtgs[${id}] true
 
-			/varcalc cnt ${cnt} + 1
+		/varcalc cnt ${cnt} + 1
 
-			/goto :AcquireTarget
-		}
+		/goto :AcquireTarget
 	}
 
 	/return 
@@ -236,17 +257,16 @@ sub Event_Auto(string line) {
 
 		/if (${Me.Name.Equal[${pckldr}]}) {
 
-			/bc follow ${Me.ID}
-		}
+			/if (!${gl_ismedg}) /call Event_Med
 
-		/if (${gl_shdmed}) /varset gl_ismedg true
+			/call Event_Follow ${Me.ID}
+		}
 
 		/echo Automation enabled.
 		
 	} else {
 
 		/varset atomat 		false
-
 		/varset gl_incmbt 	false
 		/varset gl_asstid 	0
 

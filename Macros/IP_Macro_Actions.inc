@@ -5,9 +5,11 @@ sub Check_Actions() {
 	/call "Check_Pet_Attack"
 	/call "Check_Follow"
 	/call "Check_Med"
-
 	/call "Check_Combat"
+	/call "Check_Loot"
+
 	/call "Check_Zone"
+	/if (${Macro.Return}) /return
 
 	/if (${Me.Moving}) /return
 
@@ -155,22 +157,9 @@ sub Check_Follow() {
 
 				/if (${Spawn[ID ${gl_fwlgid}].Distance} < ${gl_comdis}) {
 
-					/if (${Spawn[ID ${gl_fwlgid}].LineOfSight}) {
-						
-						/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_fwlgid}) {
+					/if (!${Stick.Active} || ${Stick.Active} && ${Stick.StickTarget} != ${gl_fwlgid}) {
 
-							/stick ID ${gl_fwlgid} ${gl_foldis}
-						}
-
-					} else {
-
-						/bc I lost sight of my follow target.
-
-						/varset gl_isfwlg false
-						/varset gl_fwlgid 0
-
-
-						/stick off
+						/stick ID ${gl_fwlgid} ${gl_foldis}
 					}
 					
 				} else {
@@ -214,7 +203,7 @@ sub Check_Med() {
 
 			/if (!${Me.Sitting} && !${Me.Moving}) {
 
-				/if (!${Corpse.Open} && !${Me.Casting.ID}) {
+				/if (!${Corpse.Open} && ${Me.SpellReady[1]}) {
 
 					/sit 
 				}
@@ -223,8 +212,7 @@ sub Check_Med() {
 		} else /if (!${Me.Standing}) {
 
 			/stand
-		}
-		
+		}	
 	}
 
 	/return
@@ -257,13 +245,26 @@ sub Check_Combat() {
 	/return 
 }
 
+sub Check_Loot() {
+
+	/if (${gl_rezflg}) {
+
+		/call Event_Loot
+	}
+
+	/return
+}
+
 sub Check_Zone() {
 	
 	/if (${gl_curzon.NotEqual[${Zone.Name}]}) {
 
 		/varset gl_curzon ${Zone.Name}
+		/varset gl_zontmr 5s
 		/varset gl_asstid 0
 		/varset gl_incmbt false
+
+		/attack off
 
 		/if (${gl_iscstr}) {
 
@@ -276,7 +277,12 @@ sub Check_Zone() {
 		}
 	}
 
-	/return
+	/if (${gl_zontmr}) {
+
+		/return 1
+	}
+
+	/return 0
 }
 
 sub Check_Group_Heal() {
@@ -587,6 +593,7 @@ sub Check_Yes() {
 	/if (${Window[ConfirmationDialogBox].Open}) {
 
 		/notify ConfirmationDialogBox CD_Yes_Button leftmouseup
+		/varset gl_rezflg 1
 	}
 
 	/return 0
