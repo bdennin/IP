@@ -1,26 +1,31 @@
 
-start /d "C:\Users\Jimbob\Downloads\IP" macroquest2.exe
-start /d "C:\Users\Jimbob\Downloads\IP" eqbcserver.exe
+set shell = CreateObject("Wscript.Shell")
+
+rem start /d "C:\Users\Jimbob\Downloads\IP" macroquest2.exe
+rem start /d "C:\Users\Jimbob\Downloads\IP" eqbcserver.exe
 
 start /d "C:\everquest UF" eqgame.exe patchme /login:bdens01
 
-timeout /t 2 /nobreak
+timeout /t 8 /nobreak
 
-start /d "C:\everquest UF" eqgame.exe patchme /login:bdens02
+shell.SendKeys "ange123"
 
-timeout /t 2 /nobreak
+rem start /d "C:\everquest UF" eqgame.exe patchme /login:bdens02
 
-start /d "C:\everquest UF" eqgame.exe patchme /login:bdens03
+rem timeout /t 2 /nobreak
 
-timeout /t 2 /nobreak
+rem start /d "C:\everquest UF" eqgame.exe patchme /login:bdens03
 
-start /d "C:\everquest UF" eqgame.exe patchme /login:bdens04
+rem timeout /t 2 /nobreak
 
-timeout /t 2 /nobreak
+rem start /d "C:\everquest UF" eqgame.exe patchme /login:bdens04
 
-start /d "C:\everquest UF" eqgame.exe patchme /login:bdens05
+rem timeout /t 2 /nobreak
 
-timeout /t 2 /nobreak
+rem start /d "C:\everquest UF" eqgame.exe patchme /login:bdens05
 
-start /d "C:\everquest UF" eqgame.exe patchme /login:bdens06
+rem timeout /t 2 /nobreak
 
+rem start /d "C:\everquest UF" eqgame.exe patchme /login:bdens06
+
+%SendKeys% "angel123"

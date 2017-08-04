@@ -1,12 +1,20 @@
-from multiprocessing import Process
+import subprocess
+import time
 
-import os
+if __name__ == '__main__':
 
-def RunChatServer(var):
-  print(var)
-  os.system("C:/Users/Jimbob/Downloads/IP/EQBCServer.exe")
+  pw = "angel123\n"
+  bytepw = bytes(pw, "ascii")
 
-for i in range(0, 5):
-  process = Process(target=RunChatServer, args=(i,), daemon=True)
-  process.start()
-  process.run()
+  #Run EQBC Server
+  #subprocess.Popen("C:/Users/Jimbob/Downloads/IP/EQBCServer.exe", creationflags=8, shell=True)
+  
+  #Run MQ2
+  #subprocess.Popen("C:/Users/Jimbob/Downloads/IP/MacroQuest2.exe", creationflags=8, shell=False)
+
+  #Open Everquest
+  eq1 = subprocess.Popen(["C:/everquest UF/eqgame.exe", "patchme", "/login:bdens01"], stdout=subprocess.PIPE, stdin=subprocess.PIPE, cwd="C:/everquest UF/", creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+  time.sleep(10)
+  eq1.communicate(bytepw)
+
+

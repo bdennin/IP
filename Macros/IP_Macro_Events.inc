@@ -55,13 +55,14 @@ sub Event_Accept_Raid(string line) {
 #event Assist "<#1#> assist on #2#"
 sub Event_Assist(string line, string sender, int ID) {
 
+	/if (${Me.Name.Equal[${sender}]}) /return
+
 	/if (${Spawn[PC ${sender}].ID} && ${Spawn[${sender}].Distance} < ${gl_comdis}) {
 
 		/if (${Spawn[ID ${ID}].ID} && ${Spawn[ID ${ID}].Distance} < ${gl_comdis}) {
 
 			/if (${Spawn[ID ${ID}].Type.NotEqual["NPC"]}) /return
 
-			/varset gl_asstpc ${sender}
 			/varset gl_asstid ${ID}
 			/varset gl_incmbt true
 		}
@@ -120,7 +121,7 @@ sub Event_Click(string line) {
 	/declare x 		int local
 	/declare y 		int local
 
-	/for i 1 to 100 
+	/for i 1 to 150
 
 		/varcalc x ${Math.Rand[3840]} + 1
 		/varcalc y ${Math.Rand[2160]} + 1
@@ -170,6 +171,7 @@ sub Event_Follow(string line, int ID) {
 
 		/varset gl_isfwlg true
 		/varset gl_fwlgid ${ID}
+		/varset gl_fwlnam ${Spawn[ID ID].Name}
 
 		/varset gl_incmbt false
 		/varset gl_asstid 0

@@ -151,7 +151,7 @@ sub Check_Auto_Med() {
 			/varset netbot ${cnctdb.Arg[${i}]}
 			/varset manpct ${NetBots[${netbot}].PctMana}
 
-			/if (${NetBots[${netbot}].Class.NotEqual["Bard"]} && ${manpct} != 0 && ${manpct} < ${endmed}) {
+			/if (${NetBots[${netbot}].Class.Name.NotEqual["Bard"]} && ${manpct} != 0 && ${manpct} < ${endmed}) {
 
 				/return 1
 			}

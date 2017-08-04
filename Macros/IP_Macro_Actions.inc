@@ -51,38 +51,18 @@ sub Check_Actions() {
 
 sub Check_Attack() {
 	
-	/if (${Me.Name.Equal[${gl_asstpc}]}) {
-
-		/if (${Target.ID} && ${Target.Distance} < ${gl_lshdis}) {
-
-			/if (${NetBots[${gl_asstpc}].Attacking}) {
-
-				/declare abl 	string	local 
-				/declare i 		int 	local
-
-				/for i 1 to ${gl_nmabls}
-
-					/varset abl ${gl_cbtabs[${i}]}
-
-					/if (${Me.AbilityReady[${abl}]}) /doability ${abl}
-
-				/next i
-			}
-		}
-
-	} else /if (${gl_asstid} != 0) { 
-
-		/if (!${Spawn[ID ${gl_asstid}].ID} || ${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
-
-			/varset gl_asstpc 0
-			/varset gl_asstid 0
-			/stick off
-			/attack off
-
-			/return
-		}
+	/if (${gl_asstid} != 0) { 
 
 		/if (${gl_ismele}) {
+
+			/if (!${Spawn[ID ${gl_asstid}].ID} || ${Spawn[ID ${gl_asstid}].Type.Equal["Corpse"]}) {
+
+				/varset gl_asstid 0
+				/stick off
+				/attack off
+
+				/return
+			}
 
 			/tar ID ${gl_asstid}
 			/delay 1
@@ -115,10 +95,6 @@ sub Check_Attack() {
 
 				/next i
 			}
-		
-		} else {
-
-			/stick off
 		}
 	}
 	
@@ -237,7 +213,6 @@ sub Check_Combat() {
 				/return
 			} 
 		}
-
 	/next i
 
 	/varset gl_incmbt false
@@ -262,9 +237,23 @@ sub Check_Zone() {
 		/varset gl_curzon ${Zone.Name}
 		/varset gl_zontmr 5s
 		/varset gl_asstid 0
+		/varset gl_fwlgid 0
 		/varset gl_incmbt false
+		/varset gl_isfwlg false
 
+		/stick off
 		/attack off
+
+		/if (${gl_fwlnam.NotEqual[""]}) {
+
+			/echo fwl name not empty
+
+			/if (${Spawn[${gl_fwlnam}].ID}) {
+
+				/varset gl_fwlgid (${Spawn[${gl_fwlnam}].ID}
+				/varset gl_isfwlg true
+			}
+		}
 
 		/if (${gl_iscstr}) {
 

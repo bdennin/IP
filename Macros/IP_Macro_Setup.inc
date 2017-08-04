@@ -21,20 +21,20 @@ sub Setup() {
 
 sub Setup_Vars() {
 
+	/if (!${Defined[gl_fwlnam]}) /declare gl_fwlnam	string 	global	""
+	
 	/if (!${Defined[gl_fwlgid]}) /declare gl_fwlgid	int 	global	0
 	/if (!${Defined[gl_asstid]}) /declare gl_asstid	int 	global	0
 	/if (!${Defined[gl_pettid]}) /declare gl_pettid	int 	global	0
+	
 	/if (!${Defined[gl_incmbt]}) /declare gl_incmbt	bool 	global	0
 	/if (!${Defined[gl_isfwlg]}) /declare gl_isfwlg	bool 	global	0
 	/if (!${Defined[gl_ismedg]}) /declare gl_ismedg	bool 	global	0
 	
-
 	||Internal variables
 	/declare gl_setini 	string 	outer 	"Settings\Settings.ini"
 	/declare gl_botini 	string 	outer 	"Bots\${MacroQuest.Server}_${Me.Name}.ini"	
 	/declare gl_curzon	string 	outer 	0
-	/declare gl_asstpc 	string 	outer 	0
-	/declare gl_assnam 	string 	outer 	0
 
 	/declare gl_dmgtmr	timer  	outer	0s
 	/declare gl_zontmr	timer  	outer	0s
