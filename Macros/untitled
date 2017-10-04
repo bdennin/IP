@@ -1,0 +1,188 @@
+
+sub AutomationSetup() {
+
+	/declare m_relocatetimer 		timer	local
+	/declare m_oorpadtimer 			timer local
+
+	/declare m_x 								int 	local
+	/declare m_y 								int 	local
+	/declare m_z 								int 	local
+	/declare m_lastx 						int 	local
+	/declare m_lasty 						int 	local
+	/declare m_lastz 						int 	local
+	/delcare m_numoors 					int 	local
+
+	/varset m_relocatetimer 1m
+	/varset m_oorpadtimer 	2s
+
+	/varset m_x 						0
+	/varset m_y 						0
+	/varset m_z 						0
+	/varset m_lastx 				0
+	/varset m_lasty					0
+	/varset m_lastz 				0
+	/varset m_numoors 			0
+}
+
+sub AutomationLoop() {
+
+	/doevents OOR
+
+	/call CheckNearby
+	/if (${Macro.Return} == 1) /return
+
+	/call CheckMed
+	/if (${Macro.Return} == 1) /return
+
+	/call CheckBuffs
+	/if (${Macro.Return} == 1) /return
+
+	/call Move
+
+	/if (!${m_relocatetimer})  {
+
+		/call Relocate
+		/return
+	}
+}
+
+sub CheckNearby() {
+
+	/if (${gl_incmbt}) {
+
+		/tar ID ${NearestSpawn[NPC].ID}
+
+		/delay 1
+
+		/bc assist on ${Target.ID}
+		/stick ID ${Target.ID}
+
+		/if (${NearestSpawn[NPC].Distance} < 20) /attack on
+
+		/delay 3s
+
+		/return 1
+	}
+
+	/return	0
+}
+
+sub Move() {
+
+	/varset m_lastx ${m_x}
+	/varset m_lastx ${m_x}
+	/varset m_lastx ${m_x}
+
+	/varset m_x ${Me.X}
+	/varset m_y ${Me.Y}
+	/varset m_z ${Me.Z}
+
+	/if (${Math.Sqrt(${Math.Pow(${x} - ${m_lastx}, 2)} + ${Math.Pow(${y} - ${m_lasty}, 2)})} < 100) /call TurnRand
+
+	/call MoveForward 2
+
+	/return
+}
+
+sub Relocate {
+
+	/attack off
+	/keypress esc
+	/bc follow ${Me.ID}
+
+	/call TurnRand
+	/call MoveForward 10
+	/call TurnRand
+	/call MoveForward 10
+
+	/varset m_relocatetimer 1m
+
+	/return
+}
+
+sub TurnRand() {
+
+	/declare rand int local
+
+	/varset rand ${Math.Rand[3]}
+
+	/if (${rand} == 0) /call TurnRight
+	/if (${rand} == 1) /call TurnLeft
+	/if (${rand} == 2) /call TurnAround
+
+	/return
+}
+
+sub TurnRight() {
+
+	/keypress d hold
+	/call Steady ${Math.Rand[5] + 1}
+	/keypress d
+
+	/return
+}
+
+sub TurnLeft() {
+
+	/keypress a hold
+	/call Steady ${Math.Rand[5] + 1}
+	/keypress a
+
+	/return
+}
+
+sub TurnAround() {
+
+	/keypress a hold
+	/call Steady 2
+	/keypress a
+
+	/return
+}
+
+sub MoveForward(int delay) {
+
+	/keypress w hold
+	/call Steady ${delay}
+	/keypress w
+
+	/return
+}
+
+sub Steady(int delay) {
+
+	/declare i int local
+
+	/for i 1 to ${delay}
+
+		/delay 1s
+
+		/if (${gl_incmbt}) /goto :Finished
+
+	/next i
+
+	:Finished
+
+	/return
+}
+
+#event Combat "#*# YOU for #*#."
+Event Combat(string line) {
+
+	/varset m_numoors 0
+
+	/return
+}
+
+#event OOR "#*# out of range."
+#event OOR "#*# see your target."
+Event OOR(string line) {
+
+	/if (!${m_oorpadtimer}) {
+
+		/varset m_oorpadtimer 2s
+		/varset m_numoors ${m_numoors} + 1
+	}
+
+	/return
+}
